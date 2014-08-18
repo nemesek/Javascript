@@ -1,0 +1,77 @@
+<html>
+	<head>
+		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			function splat(fun){
+				return function(array){
+					return fun.apply(null, array);
+				}
+			}
+
+			var addArrayElements = splat(function(x, y) {return x + y});
+
+			console.log(addArrayElements([1,3]));
+
+			function unsplat(fun){
+				return function(){
+					return fun.call(null, _.toArray(arguments));
+				};
+			}
+
+			var joinElements = unsplat(function(array){return array.join(' ')});
+
+			console.log(joinElements(1,2));
+
+			function parseAge(age){
+				if(!_.isString(age)) fail('Expecting a string');
+
+				var a;
+
+				note('Attempting to parse an age');
+				a = parseInt(age, 10);
+
+				if(_.isNaN(a)){
+					warn(["Could not parse age:", age].join(' '));
+					a = 0;
+				}
+
+				return a;
+			}
+
+			function fail(thing){
+				throw new Error(thing);
+			}
+
+			function warn(thing){
+				console.log(['WARNING:', thing].join(' '));
+			}
+
+			function note(thing){
+				console.log(['NOTE:', thing].join(' '));
+			}
+			console.log(parseAge('42'));
+
+			function isIndexed(data){
+				return _.isArray(data) || _.isString(data);
+			}
+
+			function nth(a, index){
+				if(!_.isNumber(index)) fail("Expected a number as the index");
+				if(!isIndexed(a)) fail("Not supported on non-indexed type");
+				if((index < 0) || index > a.length - 1) fail("Index value is out of bounds");
+				return a[index];
+			}
+
+			var letters = ['a', 'b', 'c', 'd'];
+			console.log(nth(letters, 1));
+
+			function second(a){
+				return nth(a,1);
+			}
+
+			console.log(second(letters));
+			console.log(second('fogus'));
+		</script>
+</body>
