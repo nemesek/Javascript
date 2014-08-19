@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<title>Proving things about the way functions are declared</title>
+		<script type="text/javascript" src="../assert.js"></script>
+		<link href="../assert.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<script type="text/javascript">
+			// Declares a named function. The name is available throughout the current scope
+			// and is implicitly added as a property of window
+			function isNimble(){return true;}
+
+			// The first test asserts that the window property is established,
+			// and the second that the name property of the function is recorded
+			assert(typeof window.isNimble === 'function', 'isNimble() defined');
+			assert(isNimble.name === 'isNimble', 'isNimble() has a name');
+
+			// Creates an anonymous function that's assigned to the variable canFly.
+			// The variable is a window property and the name property of the function is empty
+			var canFly = function(){return true;};
+
+			// Tests that the variable references the anonymous function and that the name property 
+			// is set to the empty string (not null)
+			assert(typeof window.canFly === 'function', 'canFly() defined');
+			assert(canFly.name === '', 'canFly() has no name');
+
+			// Creates an anonymous function referenced by a property value
+			window.isDeadly = function() {return true;};
+
+			// Tests that the property references the function.  We could also test that 
+			// function has an empty name property here
+			assert(typeof window.isDeadly === 'function', 'isDeadly() defined');
+
+			// Defines an inner function inside the outer function.  Tests that the inner() is able to be
+			// referenced before and after its declaration and that no globa name is created for inner
+			function outer(){
+				assert(typeof inner === 'function', 'inner() in scope before declaration');
+				function inner(){}
+				assert(typeof inner === 'function', 'inner() in scope after declaration');
+				assert(window.inner === undefined, 'inner() not in global scope');
+			}
+
+			// Tests that outer can be referenced in the global scope but that inner can't
+			outer();
+			assert(window.inner === undefined, 'inner() still not in global scope');
+
+			// The variable that we assign a function to has nothing to do with its name;
+			// that's controlled by what we actually name function in its literal
+			window.wieldSword = function swingsSword(){return true;};
+			assert(window.wieldSword.name === 'swingsSword', "wieldSword's real name is swingsSword");
+		</script>
+	</body>
+</html>

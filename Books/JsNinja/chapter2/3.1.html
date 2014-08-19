@@ -1,0 +1,20 @@
+<html>
+	<head>
+		<title>Proving things about the way functions are declared</title>
+		<script type="text/javascript" src="../assert.js"></script>
+		<link href="../assert.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<script type="text/javascript">
+			// Declares a named function. The name is available throughout the current scope
+			// and is implicitly added as a property of window
+			function isNimble(){return true;}
+
+			// The first test asserts that the window property is established,
+			// and the second that the name property of the function is recorded
+			assert(typeof window.isNimble === 'function', 'isNimble() defined');
+			assert(isNimble.name === 'isNimble', 'isNimble() has a name');
+		</script>
+	</body>
+
+</html>

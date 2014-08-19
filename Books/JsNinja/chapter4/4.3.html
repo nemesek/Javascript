@@ -1,0 +1,19 @@
+<html>
+	<head>
+		<title>Method recursion within an object</title>
+		<script type="text/javascript" src="../assert.js"></script>
+		<link href="../assert.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<script type="text/javascript">
+			// declares a recursive chirp function as a property of the ninja object
+			// We now need to call the metod from within itself using the 
+			// reference to the object's method
+			var ninja = {
+				chirp: function(n){
+					return n > 1 ? ninja.chirp(n - 1) + '-chirp' : 'chirp';
+				}
+			};
+
+			assert(ninja.chirp(3) == 'chirp-chirp-chirp', "An object property isn't too confusing either.");
+		</script>

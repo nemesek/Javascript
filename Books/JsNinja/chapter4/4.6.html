@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<title>Verifying the identity of an inline function</title>
+		<script type="text/javascript" src="../assert.js"></script>
+		<link href="../assert.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<script type="text/javascript">
+			// declares a named inline function and assignes it to a varibale
+			var ninja = function myNinja(){
+				// tests that two names are equivalent inside the inline function
+				assert(ninja == myNinja, 'This function is named two things at once');
+			};
+
+			// Invokes the function to perform the internal test
+			ninja();
+
+			// Test's that the inline function's name isn't available outside the inline function
+			assert(typeof myNinja == 'undefined', "But myNinja isn't defined outside of the function");
+		</script>
+	</body>
+</html>

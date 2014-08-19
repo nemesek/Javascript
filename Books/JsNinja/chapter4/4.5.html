@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<title>Using an inline function in a recursive fashion</title>
+		<script type="text/javascript" src="../assert.js"></script>
+		<link href="../assert.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var ninja = {
+				chirp: function signal(n){
+					return n > 1 ? signal(n-1) + '-chirp' : 'chirp';	// declares a named inline function
+				}
+			};
+
+			assert(ninja.chirp(3) == 'chirp-chirp-chirp', 'Works as we would expect it to!');
+
+			// creates a new object
+			var samurai = {chirp: ninja.chirp};
+
+			// wipe out ninja just like before
+			ninja = {};
+
+			// see if it still works
+			assert(samurai.chirp(3) == 'chirp-chirp-chirp', 'The method correctly calls itself.');
+		</script>
+	</body>
+</html>
+	

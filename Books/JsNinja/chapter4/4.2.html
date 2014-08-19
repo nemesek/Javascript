@@ -1,0 +1,16 @@
+<html>
+	<head>
+		<title>Chirping using a named function</title>
+		<script type="text/javascript" src="../assert.js"></script>
+		<link href="../assert.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<script type="text/javascript">
+			// declares a recursive chirping function that calls itself by 
+			// name until it determiens that it's done
+			function chirp(n){
+				return n > 1 ? chirp(n - 1) + '-chirp' : 'chirp';
+			}
+
+			assert(chirp(3) == 'chirp-chirp-chirp', "Calling the named function comes naturally.");
+		</script>

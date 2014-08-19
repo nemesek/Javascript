@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<title>Building a for-each function to demonstrate setting a function context</title>
+		<script type="text/javascript" src="../assert.js"></script>
+		<link href="../assert.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<script type="text/javascript">
+			// defines the for-each function
+			function forEach(list, callback){
+				for(var n = 0; n < list.length; n++){
+					callback.call(list[n], n);		// invokes the callback
+				}
+			}
+
+			var weapons = ['shuriken', 'katana', 'nunchuks'];
+
+			forEach(weapons, function(index){
+				assert(this == weapons[index], "Got the expected value of " + weapons[index]);
+			});
+		</script>
+	</body>
+</html>
+
