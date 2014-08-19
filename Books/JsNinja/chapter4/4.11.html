@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<title>Generic min() and max() functions for arrays</title>
+		<script type="text/javascript" src="../assert.js"></script>
+		<link href="../assert.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<script type="text/javascript">
+			// implements a function to find the smallest value
+			function smallest(array){
+				return Math.min.apply(Math, array);
+			}
+
+			function largest(array){
+				return Math.max.apply(Math, array);
+			}
+
+			assert(smallest([0,1,2,3]) == 0, "Located the smallest value");
+			assert(largest([0,1,2,3]) == 3, "Locates the largest value");
+		</script>
+	</body>
+</html>
