@@ -1,0 +1,19 @@
+<html>
+	<head>
+		<title>Using arguments.callee to reference the calling function</title>
+		<script type="text/javascript" src="../assert.js"></script>
+		<link href="../assert.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var ninja = {
+				chirp: function(n){
+					return n > 1 ? arguments.callee(n - 1) + '-chirp' : 'chirp';	// References callee property
+				}
+			};
+
+			assert(ninja.chirp(3) == 'chirp-chirp-chirp', 'arguments.callee is the function itself');
+		</script>
+	</body>
+</html>
+	

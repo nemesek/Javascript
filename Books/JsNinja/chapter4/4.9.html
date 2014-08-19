@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<title>Memoizing previously computed values</title>
+		<script type="text/javascript" src="../assert.js"></script>
+		<link href="../assert.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<script type="text/javascript">
+			function isPrime(value){
+				// creates the cache
+				if(!isPrime.answers) isPrime.answers = {};
+
+				// checks for cached value
+				if(isPrime.answers[value] != null){
+					return isPrime.answers[value];
+				}
+
+				var prime = value != 1;	// 1 can never be prime
+				for(var i = 2; i < Math.sqrt(value); i++){
+					if(value % i == 0){
+						prime = false;
+						break;
+					}
+				}
+
+				return isPrime.answers[value] = prime;	// stores the computed value
+			}
+
+			assert(isPrime(5), '5 is prime');
+			assert(isPrime.answers[5], 'The answer was cached');
+		</script>
+	</body>
+</html>
