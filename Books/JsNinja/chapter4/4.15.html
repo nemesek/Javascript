@@ -1,0 +1,59 @@
+<html>
+<head>
+	<title>A method oerloading function</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link href="../assert.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+	<script type="text/javascript">
+		function addMethod(object,name,fn){
+			// Stores the previous function because we ma need to call it
+			// if the passed function doesn't have a matching number of arguments
+			var old = object[name];
+
+			// Creates a new anonymous function that becomes the method
+			object[name] = function(){
+				// Invokes the passed function if its parameter and argument count match
+				if(fn.length == arguments.length) return fn.apply(this,arguments);	
+				// Invokes the previous function if passed function isn't a match
+				else if(typeof old == 'function') return old.apply(this, arguments);
+			};
+		}
+
+		// Declares an object to serve as the base, preloaded with some test data
+		var ninjas = {
+			values: ["Dean Edwards", "Sam Stephenson", "Sam Russell"]
+		};
+
+		// Binds a no-argument method to the base object
+		addMethod(ninjas, "find", function(){
+			return this.values;
+		});
+
+		// Binds a single-argument method to the base object
+		addMethod(ninjas, "find", function(name){
+			var ret = [];
+			for(var i = 0; i < this.values.length; i++) 
+				if(this.values[i].indexOf(name) == 0)
+					ret.push(this.values[i]);
+				return ret;
+
+		});
+
+		// Binds a dual-argument method to the base object
+		addMethod(ninjas, "find", function(first, last){
+			var ret = [];
+			for(var i = 0; i < this.values.length; i++)
+				if(this.values[i] == (first + " " + last))
+					ret.push(this.values[i]);
+				return ret;
+		});
+
+		assert(ninjas.find().length == 3, "Found all ninjas");
+		assert(ninjas.find("Sam").length == 2, "Found ninja by first name");
+		assert(ninjas.find("Dean", "Edwards").length == 1, "Found ninja by first and last name");
+		assert(ninjas.find("Alex", "Russell", "Jr") == null, "Found nothing");
+	</script>
+
+</body>
+</html>
