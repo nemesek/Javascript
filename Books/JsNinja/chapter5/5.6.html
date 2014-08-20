@@ -1,0 +1,41 @@
+<html>
+<head>
+	<title>Using a closure in a timer interval callback</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+	<style type="text/css">
+      #box { position: absolute; border: 3px solid blue; width: 200px; height: 200px; background-color: #6495ed; font-size: 2em; }
+    </style>
+</head>
+<body>
+	<div id="box">ボックス</div>
+
+	<script type="text/javascript">
+
+		function animateIt(elementId){
+			var elem = document.getElementById(elementId);
+			var tick = 0; 	// Establishes a counter to keep track of animation ticks (steps)
+
+			// Creates and starts an interval timer given a callback function
+			// that will be invoked every 10ms.  For 100 ticks it will adjust the position of the element
+			var timer = setInterval(function(){
+				if(tick < 100){
+					elem.style.left = elem.style.top = tick + "px";
+					tick++;
+				} else{
+					// After 100 ticks we stop the timer and perform tests to assert that
+					// we can see all relevant variables needed to perform the animation
+					clearInterval(timer);
+					assert(tick == 100, "Tick access via closure");
+					assert(elem, "Element also accessed via closure");
+					assert(timer, "Timer reference also obtained via closure");
+				}
+			}, 10);	
+		}
+
+		// Now that it's all set up we set it in motion
+		animateIt('box');
+		
+	</script>
+</body>
+</html>

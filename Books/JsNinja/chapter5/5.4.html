@@ -1,0 +1,44 @@
+<html>
+<head>
+	<title>Using closures to approximate private variables</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link href="../assert.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+	<script type="text/javascript">
+		// Defines the ctor for a Ninja
+		function Ninja(){
+			// Declares a variable inside the function (constructor).
+			// Because the scope of the variable is limited to inside the constructor, it's a "private"
+			// variable.
+			var feints = 0;
+			// Creates an accessor method for the feints counter.  As the variable is not accessible
+			// to code outside the constructor, this is a common way to give read-only access to the value
+			this.getFeints = function(){
+				return feints;
+			};
+
+			// Declares the increment method for the value.  Because the value is private,
+			// no one can screw it up behind our backs;  they are limited to the access that we give 
+			// them via methods
+			this.feint = function(){
+				feints++;
+			};
+
+		}
+
+		// first we construct an instance of Ninja
+		var ninja = new Ninja();
+
+		// Calls the feint() method, which increments the count of the number of times that our ninja has feinted
+		ninja.feint();
+
+		// Shows that we've caused the value to increment to 1, even though we had no direct access to it.
+		// We can affect the feints value because, even though the constructor in which it's declared has finished executing
+		// and gone out of scope, the feints variable is bound into the closure (thin protective) created by the declaration
+		// of the feint() method, and is available to that method
+		assert(ninja.getFeints() == 1, "We're able to access the internal feint count");
+		assert(ninja.feints === undefined, "And the private data is inaccessible to us.");
+	</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<html>
+<head>
+	<title>A not so simple closure</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link href="../assert.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+	<script type="text/javascript">
+		// updated to include 5.3
+		var outerValue = 'ninja';
+
+		// Declares an empty variable that we'll use later. 
+		var later;
+
+		function outerFunction(){
+			// Declares a value inside the function.  This variable's scope is limited to the function and cannot
+			// be accessed from outside the function.
+			var innerValue = 'samurai';
+
+			// Declares an inner function within the outer function.  Note that
+			// innerValue is in scope when we declare this function
+			function innerFunction(paramValue){
+				
+				assert(outerValue, "I can see the ninja");
+				assert(innerValue, "I can see the samurai");
+				assert(paramValue, "Inner can see the wakizashi");
+				assert(tooLate, "Inner can see the ronin");
+			}
+
+			// Stores a ref to the inner function in the later variable.  
+			// Because later is in the global scope, it will allow us to call the function later
+			later = innerFunction;
+		}
+
+		assert(!tooLate, "Outer can't see the ronin");
+
+		var tooLate = 'ronin';
+
+		// Invokes the outer function which causes the inner function to be declared and its 
+		// ref assigned to later
+		outerFunction();
+		later('wakizashi');
+
+		// Invokes the inner function through later.  We can't invoke it directly because its scope(along with innerValue)
+		// is limited to within outerFunction
+		//later();
+	</script>
+</body>
+</html>

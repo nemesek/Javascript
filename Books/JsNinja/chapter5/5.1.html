@@ -1,0 +1,21 @@
+<html>
+	<head>
+		<title>A Simple closure</title>
+		<script type="text/javascript" src="../assert.js"></script>
+		<link href="../assert.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<script type="text/javascript">
+			// defines a value in global scope
+			var outerValue = 'ninja';
+
+			// declares a function in global scope
+			function outerFunction(){
+				assert(outerValue == 'ninja', 'I can see the ninja');
+			}
+
+			outerFunction();
+		</script>
+	</body>
+</html>
+	
