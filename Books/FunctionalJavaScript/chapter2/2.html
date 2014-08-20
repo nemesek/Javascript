@@ -1,0 +1,67 @@
+<html>
+<head>
+	<title>Chapter2</title>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		var lyrics = [];
+
+		// for(var bottles = 5; bottles > 0; bottles--){
+		// 	lyrics.push(bottles + " bottles of beer on the wall");
+		// 	lyrics.push(bottles + " bottles of beer");
+		// 	lyrics.push("Take one down, pass it around");
+
+		// 	if(bottles > 1){
+		// 		lyrics.push((bottles - 1) + " bottles of beer on the wall.");
+		// 	} else{
+		// 		lyrics.push("No more bottles of beer on the wall");
+		// 	}
+		// }
+
+		// console.log(lyrics);
+		// lyrics = [];
+		function lyricSegment(n){
+			return _.chain(lyrics)
+				.push(n + " bottles of beer on the wall")
+				.push(n + " bottles of beer")
+				.push("Take one down, pass it around")
+				.tap(function(lyrics){
+					if(n > 1){
+						lyrics.push((n - 1) + " bottles of beer on the wall.");
+					} else
+						lyrics.push("No more bottles of beer on the wall!");
+				})
+				.value();
+		}
+
+		function song(start, end, lyricGen){
+			return _.reduce(_.range(start, end, -1), function(acc, n){
+				return acc.concat(lyricGen(n));
+			}, []);
+		}
+
+		console.log(song(5,0, lyricSegment));
+		//console.log(lyrics);
+
+		function Point2D(x, y){
+			this._x = x;
+			this._y = y;
+		}
+
+		var twoD = new Point2D(0, 1);
+		console.log(twoD);
+
+		function Point3D(x, y, z){
+			Point2D.call(this, x, y);
+			this._z = z;
+		}
+
+		var threeD = new Point3D(10, -1, 100);
+		console.log(threeD);
+
+
+
+	</script>
+</body>
+</html>

@@ -81,7 +81,59 @@
 				},[]);
 			}
 
-			var peopleTable = lameCSV("name, age, hair\n")
+			var peopleTable = lameCSV("name, age, hair\nMerble,35,red\nBob,64,blonde");
+			console.log((peopleTable));
+
+			var sorted = _.rest(peopleTable).sort();
+			console.log(sorted);
+
+			function selectNames(table){
+				return _.rest(_.map(table, _.first));
+			}
+
+			function selectAges(table){
+				return _.rest(_.map(table, second));
+			}
+
+			function selectHairColor(table){
+				return _.rest(_.map(table, function(row){
+					return nth(row, 2);
+				}))
+			}
+
+			var mergeResults = _.zip;
+
+			console.log(selectNames(peopleTable));
+			console.log(selectAges(peopleTable));
+			console.log(selectHairColor(peopleTable));
+
+			function existy(x){return x != null};
+			function truthy(x){return (x !== false) && existy(x)};
+
+			console.log(truthy(false));
+			console.log(truthy(undefined));
+			console.log(truthy(0));
+			console.log(truthy(''));
+
+			function doWhen(cond, action){
+				if(truthy(cond))
+					return action();
+				else
+					return undefined;
+			}
+
+			function executeIfHasField(target, name){
+				return doWhen(existy(target[name]), function(){
+					var result = _.result(target,name);
+					console.log(['The result is', result].join(' '));
+					return result;
+				});
+			}
+
+			executeIfHasField([1,2,3], 'reverse');
+			executeIfHasField({foo:42}, 'foo');
+			executeIfHasField([1,2,3], 'notHere');
+
 
 		</script>
 </body>
