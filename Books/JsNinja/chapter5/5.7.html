@@ -1,0 +1,38 @@
+<html>
+<head>
+	<title>Binding a specific context to a function</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<button id="test">Click Me!</button>
+	<script type="text/javascript">
+		// Defines a "binding" function that wraps a call to the method of an object within another
+		function bind(context, name){
+			return function(){
+				return context[name].apply(context, arguments);
+			}
+		}
+		// Defines an object to retain state regarding our button.  With it, we'll track whether button
+		// has been clicked or not
+		var button = {
+			clicked: false,
+
+			// Declares the method that we'll use as the click handler.  Because it's a method of the object,
+			// we use this within the function to get a reference to the object
+			click: function(){
+				this.clicked = true;
+				assert(button.clicked, "The button has been clicked");
+				console.log(this);
+			}
+		};
+
+		var elem = document.getElementById("test");
+		// fails
+		// elem.addEventListener("click", button.click, false);
+
+		// works
+		elem.addEventListener("click", bind(button, "click"), false);
+	</script>
+</body>
+</html>

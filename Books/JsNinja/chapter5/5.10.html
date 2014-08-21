@@ -1,0 +1,18 @@
+<html>
+<head>
+	<title>Partially applying arguments to a native function</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<script type="text/javascript">
+		// Creates new String function
+		String.prototype.csv = String.prototype.split.partial(/,\s*/);
+
+		// Invokes curried function
+		var results = ("Mugan, Jin, Fuu").csv();
+
+		assert(results[0] == "Mugan" && results[1] == "Jin" && results[2] == "Fuu", "The text values were split properly");
+	</script>
+</body>
+</html>
