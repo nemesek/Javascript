@@ -1,0 +1,30 @@
+<html>
+<head>
+	<title>Enforcing the use of a name within an enclosed scope</title>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.js"></script>
+	<script type="text/javascript" src="../assert.js"></script>
+</head>
+<body>
+	<img src="../ninja-with-pole.png">
+	<script type="text/javascript">
+		// Redefines $ to be something other than jquery
+		$ = function(){alert('not jquery');};
+
+		// The IIFE expects a single parameter that it names $
+		// Within the function this parameter overrides any use of $ in a higher scope
+
+		(function($){
+			//  Inside the function we use the $ as if it were still assigned to Jquery.  Note that we not only use the $
+			// in the function, we also use it in the event handler.  Even though the event handler will be called much later,
+			// the $ parameter is bound to it by its closure
+			$('img').on('click', function(event){
+				$(event.target).addClass('clickedOn');
+				console.log('clicked');
+			});
+
+		})(jQuery);  // In calling the IIFE we pass jQuery as the sole argument.  This binds jQuery to the $ parameter.
+
+		$();
+	</script>
+</body>
+</html>
