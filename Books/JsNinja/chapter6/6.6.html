@@ -1,0 +1,20 @@
+<html>
+<head>
+	<title>Instantiating a new object using a reference to a constructor</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<script type="text/javascript">
+		function Ninja(){}
+
+		var ninja = new Ninja();
+
+		// constructs a second Ninja from the first
+		var ninja2 = new ninja.constructor();
+
+		assert(ninja2 instanceof Ninja, "It's a ninja");
+		assert(ninja2 !== ninja, "But not the same ninja");
+	</script>
+</body>
+</html>

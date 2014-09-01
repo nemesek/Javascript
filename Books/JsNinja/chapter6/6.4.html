@@ -1,0 +1,25 @@
+<html>
+<head>
+	<title>Further observing the behavior of changes to the prototype</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<script type="text/javascript">
+		function Ninja(){
+			this.swung = false;
+			this.swingSword = function(){ // defines an instance method with same name as a prototype method
+				return !this.swung;
+			};
+		}
+
+		var ninja = new Ninja();	
+
+		Ninja.prototype.swingSword = function(){ // defines a prototyped method with same name as the instance method
+			return this.swung;
+		};
+
+		assert(ninja.swingSword(), "Called the instance method, not the prototype method");
+	</script>
+</body>
+</html>

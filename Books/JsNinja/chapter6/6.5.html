@@ -1,0 +1,18 @@
+<html>
+<head>
+	<title>Examining the type of an instance and its constructor</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<script type="text/javascript">
+		function Ninja(){}
+
+		var ninja = new Ninja();
+
+		assert(typeof ninja == 'object', "The type of the istance is an object.");
+		assert(ninja instanceof Ninja, "instanceof identifies the constructor");
+		assert(ninja.constructor == Ninja, "the ninja object was created by the Ninja function.");
+	</script>
+</body>
+</html>
