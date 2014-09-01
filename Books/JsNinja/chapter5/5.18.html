@@ -1,0 +1,21 @@
+<html>
+<head>
+	<title>Using an immediate function to handle the iterator properly</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<div>DIV 0</div>
+	<div>DIV 1</div>
+
+	<script type="text/javascript">
+		var div = document.getElementsByTagName("div");
+
+		for(var i = 0; i < div.length; i++) (function(n){
+			div[n].addEventListener("click", function(){
+				alert("div #" + n + " was clicked.");
+			}, false);
+		})(i);
+	</script>
+</body>
+</html>
