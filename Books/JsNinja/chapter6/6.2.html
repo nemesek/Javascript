@@ -1,0 +1,31 @@
+<html>
+<head>
+	<title>Observing the precedence of initialization activites</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<script type="text/javascript">
+		function Ninja(){
+			// Creates an instance variable that holds a Boolean value initialized to false
+			this.swung = false;
+
+			// Creates an instance method that returns the inverse of the swung instance variable value
+			this.swingSword = function(){
+				return !this.swung;
+			};
+		}
+
+		// Defines a prototype method with the same name as the instance method.
+		// Which will take precedence?
+		Ninja.prototype.swingSword = function(){
+			return this.swung;
+		};
+
+		// Construcs a Ninja instance for testing and asserts that instance method
+		// will override prototype method of the same name.  Will the test pass?
+		var ninja = new Ninja();
+		assert(ninja.swingSword(), "called the instance method, not the prototype method");
+	</script>
+</body>
+</html>
