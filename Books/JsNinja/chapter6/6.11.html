@@ -1,0 +1,23 @@
+<html>
+<head>
+	<title>Unexpected behavior of adding extra properties to the Object prototype</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<script type="text/javascript">
+		// Defines a new method in the Object prototype
+		Object.prototype.keys = function(){
+			var keys = [];
+			for(var p in this)keys.push(p);
+			return keys;
+		};
+
+		// Creates an object to serve as a test subject
+		var obj = {a: 1, b:2, c:3};
+
+		// Tests the new method by checking the length of the array
+		assert(obj.keys().length == 3, "There are three properties in this subject");
+	</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<html>
+<head>
+	<title>A future-proof JavaScript 1.6 forEach() method implementation</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<script type="text/javascript">
+		// Tests for the pre-existence of the method.  We don't want to redefine
+		// it in browsers that provide it for us
+		if(!Array.prototype.forEach){
+
+			Array.prototype.forEach = function(callback, context){  // Adds the method to the Array prototype.  After this, it's a method of all arrays.
+				for(var i = 0; i < this.length; i++){
+					callback.call(context || null, this[i], i, this); // Calls the callback for each array entry
+				}
+			};
+
+		}
+
+		["a", "b", "c"].forEach(function(value, index, array){
+			assert(value, "Is in position " + index + " out of " + (array.length -1));
+		});
+	</script>
+</body>
+</html>
