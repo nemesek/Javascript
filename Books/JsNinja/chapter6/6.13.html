@@ -1,0 +1,25 @@
+<html>
+<head>
+	<title>Adding a method to the Number prototype</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css"/>
+</head>
+<body>
+	<script type="text/javascript">
+		// Defines a new method on the Number prototype
+		Number.prototype.add = function(num){
+			return this + num;
+		};
+
+		// tests the method using a variable
+		var n = 5;
+		assert(n.add(3) == 8, "It works when the number is in a variable");
+
+		// tests the method using an expression format
+		assert((5).add(3) == 8, "Also works if a number is wrapped in parenthesis");
+
+		// tests method using a literal format.  We'd expect all of this tests to pass, no?
+		assert(5.add(3) == 8, "What about a simple literal");
+	</script>
+</body>
+</html>
