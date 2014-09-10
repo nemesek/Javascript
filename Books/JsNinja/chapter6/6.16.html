@@ -1,0 +1,24 @@
+<html>
+<head>
+	<title>The result of leaving off the new opertor from a function call</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css"/>
+</head>
+<body>
+	<script type="text/javascript">
+		// defines a User class with a name property
+		function User(first, last){
+			this.name = first + " " + last;
+		}
+
+		// Creates a test user
+		var user = User("Ichigo", "Kurosaki");
+
+		// tests that user was instantiated
+		assert(user, "User Instantiated");
+
+		// tests that the constructor properly assigned the name
+		assert(user.name == "Ichigo Kurosaki", "User name correctly assigned");
+	</script>
+</body>
+</html>

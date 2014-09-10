@@ -1,0 +1,22 @@
+<html>
+<head>
+	<title>Accidentally introducing a variable into the global namespace</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css"/>
+</head>
+<body>
+	<script type="text/javascript">
+		function User(first, last){
+			this.name = first + " " + last;
+		}
+
+		// creates a global variable
+		var name = "Rukia";
+
+		// Calls the constructor incorrectly again
+		var user = User("Ichigo", "Kurosaki");
+
+		assert(name == "Rukia", "Name was set to Rukia");
+	</script>
+</body>
+</html>

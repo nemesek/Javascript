@@ -1,0 +1,17 @@
+<html>
+<head>
+	<title>Determining whether we're called as a constructor</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css"/>
+</head>
+<body>
+	<script type="text/javascript">
+		function Test(){
+			return this instanceof arguments.callee;
+		}
+
+		assert(!Test(), "We didn't instantiate, so it returns false");
+		assert(new Test(), "We did instantiate, returning true");
+	</script>
+</body>
+</html>
