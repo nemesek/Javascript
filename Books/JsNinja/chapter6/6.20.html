@@ -1,0 +1,51 @@
+<html>
+<head>
+	<title>An example of somewhat classical-style inheritance syntax</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css"/>
+	<script type="text/javascript" src="subclass.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		// Creates a Person class as a subclass of Object by using subclass()
+		// method we'll end up implenting
+		var Person = Object.subClass({
+			init:function(isDancing){
+				this.dancing = isDancing;
+			},
+
+			dance:function(){
+				return this.dancing;
+			}
+		});
+
+		// Creates the Ninja class by subclassing Person
+		var Ninja = Person.subClass({
+			init: function(){
+				// we need a way to call the superclass constructor -- here's how we'll do it
+				this._super(false);
+			},
+			dance:function(){
+				// Ninja specific stuff here
+				return this._super();
+			},
+			swingSword:function(){
+				return true;
+			}
+		});
+
+		// Tests the Person lass by creating an instance and see if it dances
+		var person = new Person(true);
+		assert(person.dance(), "The person is dancing");
+
+		// Tests the Ninja class by creating an instance
+		// and checking that it has both the swinging
+		// method and the inherited dancing method
+		var ninja = new Ninja();
+		assert(ninja.swingSword(), "The sword is swinging.");
+		assert(!ninja.dance(), "The ninja is not dancing");
+		assert(person instanceof Person, "Person is a Person.");
+		assert(ninja instanceof Ninja && ninja instanceof Person, "Ninja is a Ninja and a Person.");
+	</script>
+</body>
+</html>
