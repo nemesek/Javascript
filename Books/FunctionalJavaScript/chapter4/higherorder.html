@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>Higher Order functions</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+        console.log(_.max([1,2,3,4.75,4.5]));
+
+        // extend max to return max value of object
+        var people = [{name:"Fred", age:65}, {name:"Lucy", age:36}];
+
+        console.log(_.max(people, function(p){return p.age;}));
+
+        // this function takes two functions: one to build a comparable value
+        // and another to compare two values and return the 'best' value of
+        // the two
+        function finder(valueFun, bestFun, coll){
+          return _.reduce(coll, function(best, current){
+            var bestValue = valueFun(best);
+            var currentValue = valueFun(current);
+
+            return (bestValue === bestFun(bestValue, currentValue)) ? best : current;
+          });
+        }
+
+        console.log(finder(_.identity, Math.max, [1,2,3,4,5]));
+
+        function plucker(FIELD){
+          return function(obj){
+            return(obj && obj[FIELD]);
+          };
+        }
+
+        console.log(finder(plucker('age'), Math.max, people));
+        console.log(finder(plucker('name'), function(x,y){
+          return (x.charAt(0) === "L") ? x : y
+        }, people));
+
+        // lets tighten up finder...a lot of complexity
+        // with having one fn to unwrap values and the other to compare
+        function best(fun, coll){
+          return _.reduce(coll, function(x,y){
+            return fun(x,y) ? x : y
+          });
+        }
+
+        console.log(best(function(x,y){return x > y;}, [1,2,3,4,5]));
+
+        function repeat(times, VALUE){
+          return _.map(_.range(times), function(){return VALUE;});
+        }
+
+        console.log(repeat(4, "Major"));
+
+        // Use function, not values
+        // a function that repeats a computation is better than a fn that repeats
+        // a value
+        function repeatedly(times, fun){
+          return _.map(_.range(times), fun);
+        }
+
+        console.log(repeatedly(3, function(){
+          return Math.floor((Math.random()*10) + 1)
+        }));
+
+        // here is simulation of the repeat with using a fn
+        // that just returns a value
+        console.log(repeatedly(3,function(){
+          return "Odelay!";
+        }));
+
+        function iterateUntil(fun, check, init){
+          var ret = [];
+          var result = fun(init);
+
+          while(check(result)){
+            ret.push(result);
+            result = fun(result);
+          }
+          return ret;
+        }
+
+        console.log(iterateUntil(function(n){return n + n;}, function(n){
+          return n <= 1024;}
+          ,1)
+          );
+    </script>
+  </body>
+</html>
