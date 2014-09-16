@@ -63,6 +63,10 @@
 		console.log(add1024(11));
 		console.log(add10(32));
 
+		function average(elements){
+			return _.reduce(elements, function(x,y){return x+y;})/_.size(elements);
+		}
+
 		// the following function captures a function and returns a functions
 		// that calculates the average of some value and the result of passing
 		// it to the captured function
@@ -75,6 +79,107 @@
 		var averageSq = averageDamp(function(n){return n*n});
 		console.log(averageSq(10));
 
+		// shadowing example
+		var shadowed = 0;
+
+		function argShadow(shadowed){
+			return ["Value is", shadowed].join(' ');
+		}
+
+		console.log(argShadow(108));
+
+
+		// caputring a shadowed variable
+		function captureShadow(SHADOWED){
+			return function(SHADOWED){
+				return SHADOWED + 1;
+			};
+		}
+
+		var closureShadow = captureShadow(108);
+		console.log(closureShadow(2));
+
+		// take a pred function and returns a new
+		// function that returns opposite truthiness
+		function complement(PRED){
+			return function(){
+				return !PRED.apply(null, _.toArray(arguments));
+			};
+		}
+
+		function isEven(n){debugger;return (n % 2) === 0;}
+
+		var isOdd = complement(isEven);
+		console.log(isOdd(2));
+
+		// but what happens if we redefine isEven
+		// going to reassign rather than redefine
+		//function isEven(n){debugger;return false;}
+		// this works...must have been beause the function declaration is hoisted
+		isEven = function(n){debugger; return false;}
+
+		// they should still print true, false
+		// because the closure grabs the ref to the function
+		// at the time the closure is created...didn't work out that way
+		// maybe because the function is hoisted up
+		console.log(isOdd(13));
+		console.log(isOdd(12));
+
+		function showObject(OBJ){
+			return function(){
+				return OBJ;
+			};
+		}
+
+		var o = {a:42};
+		var showO = showObject(o);
+
+		console.log(showO());
+
+		o.newField = 108;
+		// this new field gets picked up
+		// since the reference to o exists inside and outside the closure
+		console.log(showO());
+
+		// common pattern with closures is to use captured variables
+		// as private data
+		var pingpong = (function(){
+			var PRIVATE = 0; // private to the two closures 'inc', 'dec'
+
+			return{
+				inc: function(n){
+					return PRIVATE += n;
+				},
+				dec: function(n){
+					return PRIVATE -= n;
+				}
+			};
+		})();
+
+		console.log(pingpong.inc(10));
+		console.log(pingpong.dec(7));
+
+		// Closures as an Abstraction
+		// this function takes a key into an associative structure
+		// such as an array or an object and returns a function
+		// that, given a structure, returns the value at the key
+		function plucker(FIELD){
+			return function(obj){
+				return(obj && obj[FIELD]);
+			};
+		}
+
+		var best = {title: "Infinite Jest", author:"DFW"};
+		var getTitle = plucker('title');
+		console.log(getTitle(best));
+
+		// also works with arrays
+		var books = [{title: "Chthon"}, {stars: 5}, {title: "Botchan"}];
+		var third = plucker(2);
+		console.log(third(books));
+
+		// plucker works good with filter
+		console.log(_.filter(books, getTitle));
 	</script>
 </body>
 </html>
