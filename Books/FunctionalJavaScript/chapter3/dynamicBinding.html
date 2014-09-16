@@ -57,6 +57,44 @@
       var nopeThis = _.bind(globalThis, 'nope');
       console.log(nopeThis.call('wat'));
 
+      // Function scope
+      function strangeIdentity(n){
+        // intentionally strange
+        for(var i=0; i<n;i++);
+        return i;
+      }
+
+      console.log(strangeIdentity(138));
+
+      function strangerIdentity(n){
+        // intentionally stranger still
+        for(this['i'] = 0; this['i'] < n; this['i']++);
+        return this['i'];
+      }
+
+      console.log(strangerIdentity(108));
+      // is i global now?
+      console.log(i);
+
+      // supply scratch space for function to not modify global i
+      // pass empty object as context
+      console.log(strangerIdentity.call({}, 10000));
+      console.log(i);
+
+      // Lets create a global context and clone it, in order to give both global and local access
+      // but not modify the global context
+      function f2(){
+        this['a'] = 200;
+        return this['a'] + this['b'];
+      }
+
+      var globals2 = {'b': 2};
+
+      console.log(f2.call(_.clone(globals2)));
+
+      // check the global context to make sure we didn't add a
+      console.log(globals2);
+
     </script>
   </body>
 </html>

@@ -1,0 +1,80 @@
+<html>
+<head>
+	<title>Simulating Closures</title>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		function whatWasTheLocal(){
+			var CAPTURED = "Oh hai";
+
+			return function(){
+				return "The local was: " + CAPTURED;
+			};
+		}
+
+		var reportLocal = whatWasTheLocal();
+		console.log(reportLocal());
+
+		// we can capture more than local vars...function args as well
+		// takes a scaling factor and returns a function that, given a collection of numbers,
+		// returns a list of its elements multiplied by the original scaling factor
+		function createScaleFunction(FACTOR){
+			return function(v){
+				return _.map(v, function(n){
+					return (n * FACTOR);
+				});
+			};
+		}
+
+		var scale10 = createScaleFunction(10);
+		console.log(scale10([1,2,3]));
+
+		// simulate closure using function scoped this
+		function createWeirdScaleFunction(FACTOR){
+			return function(v){
+				this['FACTOR'] = FACTOR;
+				var captures = this;
+
+				return _.map(v, _.bind(function(n){
+					return (n * this['FACTOR']);
+				}, captures));
+			};
+		}
+
+		scale10 = createWeirdScaleFunction(10);
+		console.log(scale10.call({}, [5,6,7]));
+
+		// free variables example
+		// these variables can be grabbed and carried along for later use
+		// in inner functions that 'escape' from a higher-level function via return
+		// not sure how these are any different than closures?  I guess since the inner delcares it wasn't technically captured?
+		function makeAdder(CAPTURED){
+			return function(free){
+				return free + CAPTURED;
+			};
+		}
+
+		// each new adder function retains its own unique instance of CAPTURED
+		var add10 = makeAdder(10);
+		console.log(add10(32));
+
+		var add1024 = makeAdder(1024);
+		console.log(add1024(11));
+		console.log(add10(32));
+
+		// the following function captures a function and returns a functions
+		// that calculates the average of some value and the result of passing
+		// it to the captured function
+		function averageDamp(FUN){
+			return function(n){
+				return average([n, FUN(n)]);
+			}
+		}
+
+		var averageSq = averageDamp(function(n){return n*n});
+		console.log(averageSq(10));
+
+	</script>
+</body>
+</html>
