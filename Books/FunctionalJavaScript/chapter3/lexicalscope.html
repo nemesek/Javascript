@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <title>Lexcical Scope example</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      aVariable = "Outer";
+
+      function aFun(){
+        var aVariable = "Middle";
+
+        return _.map([1,2,3], function(e){
+          var aVariable = "In";
+          return [aVariable, e].join('');
+        });
+      }
+
+      console.log(aFun());
+
+      // set up another global to see if he gets clobbered
+      var myObject ={
+        character: "Prop Joe",
+        sayName : function(){
+          console.log("Prop Joe's the name");
+        },
+        funcThatReferencesGlobal: function(){
+          console.log(myObject.character);  // this dude wil get stomped on
+        }
+      };
+
+      // set up IIFE to see if he hangs on to global
+      var scopedSucka = (function(foo){
+        var name = foo.character;
+        var sayName = foo.sayName;
+        var globalFuncRef = foo.funcThatReferencesGlobal;
+
+        return {
+          name : name,
+          whatsMyName: sayName,
+          globalFuncRef: globalFuncRef
+        };
+      })(myObject);
+
+      // redefine the sayName function...no effect
+      myObject.sayName = function(){
+        console.log("Stringer's the name");
+      };
+
+      // will my global get clobbered?
+      var myObject={
+        character :"Avon",
+        sayName : function(){
+          console.log("Barksdale is the name");
+        }
+      }
+
+      scopedSucka.whatsMyName();
+      console.log(scopedSucka.name);
+      scopedSucka.globalFuncRef();
+    </script>
+  </body>
+</html>
