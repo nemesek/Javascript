@@ -111,7 +111,6 @@
       // this fn replaces null/undefined args with the default arg
       function fnull(fun){
         var defaults = _.rest(arguments);
-
         return function(){
           var args = _.map(arguments, function(e,i){
             return existy(e) ? e : defaults[i];
@@ -121,11 +120,29 @@
         };
       }
 
-      var safeMult = fnull(function(total, n){return total * n}, 1,1);
+      var safeMult = fnull(function(total, n){
+          return total * n
+        }, 1, 1);
+
       var nums = [1,2,3, null,5];
       console.log(_.reduce(nums, safeMult));
 
+      // the use of fnull ensures that for any config object
+      // the critical values are set to sensible defaults
+      function defaults(d){
+        return function(o,k){
+          var val = fnull(_.identity, d[k]);
+          return o && val(o[k]);
+        };
+      }
 
+      function doSomething(config){
+        var lookup = defaults({critical:108});
+        return lookup(config, 'critical');
+      }
+
+      console.log(doSomething({critical:9}));
+      console.log(doSomething({}));
 
     </script>
   </body>

@@ -1,0 +1,95 @@
+<html>
+  <head>
+    <title>Object Validators - putting it all together</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      function always(VALUE){
+        return function(){
+          return VALUE;
+        };
+      }
+
+      function checker(){
+        var validators = _.toArray(arguments);
+
+        return function(obj){
+          return _.reduce(validators, function(errs, check){
+            if(check(obj))
+              return errs;
+            else
+              return _.chain(errs).push(check.message).value();
+          },[]);
+        };
+      }
+
+      // this will always pass validation
+      var alwaysPasses = checker(always(true), always(true));
+      console.log(alwaysPasses({}));
+
+      var fails = always(false);
+      fails.message = "a failure in life";
+      var alwaysFails = checker(fails);
+      console.log(alwaysFails({}));
+
+      // better to have a specific api for creating api's rather than setting a
+      // message property
+      function validator(message, fun){
+        var f = function(){
+          return fun.apply(fun, arguments);
+        };
+
+        f['message'] = message;
+        return f;
+      }
+
+      var gonnaFail = checker(validator("ZOMG!", always(false)));
+
+      console.log(gonnaFail(100));
+
+      // isolate the definition of individual checkers
+      // this function can be used as an arg to checker
+      // to provide a virtual sentence
+      function aMap(obj){
+        return _.isObject(obj);
+      }
+
+      var checkCommand = checker(validator("must be a map", aMap));
+      console.log(checkCommand({}));
+      console.log(checkCommand(42));
+
+      function existy(x){return x != null};
+
+      function cat(){
+        var head = _.first(arguments);
+
+        if(existy(head))
+          return head.concat.apply(head, _.rest(arguments));
+        else
+          return [];
+      }
+
+      function hasKeys(){
+        var KEYS = _.toArray(arguments);
+
+        var fun = function(obj){
+          return _.every(KEYS, function(k){
+            return _.has(obj, k);
+          });
+        };
+
+        fun.message = cat(["Must have values for keys:"], KEYS).join(" ");
+        return fun;
+      }
+
+      var checkCommand2 = checker(validator("must be a map", aMap),
+        hasKeys('msg', 'type'));
+
+      console.log(checkCommand2({msg: "blah", type:"display"}));
+      console.log(checkCommand2(42));
+      console.log(checkCommand2({}));
+
+    </script>
+  </body>
+</html>
