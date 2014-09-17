@@ -25,8 +25,21 @@
           console.log("Prop Joe's the name");
         },
         funcThatReferencesGlobal: function(){
-          console.log(myObject.character);  // this dude wil get stomped on
+          if(myObject.character){
+            console.log(myObject.character);  // this dude wil get stomped on
+          } else{
+            console.log('Stomped');
+          }
         }
+      };
+
+
+      var logger = function(){
+        return function(s){
+          s.whatsMyName();
+          console.log(s.name);
+          s.globalFuncRef();
+        };
       };
 
       // set up IIFE to see if he hangs on to global
@@ -55,9 +68,11 @@
         }
       }
 
-      scopedSucka.whatsMyName();
-      console.log(scopedSucka.name);
-      scopedSucka.globalFuncRef();
+      var log1 = logger();
+      log1(scopedSucka);
+      myObject = {};
+      log1(scopedSucka);
+
     </script>
   </body>
 </html>
