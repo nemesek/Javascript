@@ -2,28 +2,10 @@
   <head>
     <title>Functions That Return Other Functions</title>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
   </head>
   <body>
     <script type="text/javascript">
-      function existy(x){return x != null};
-      function truthy(x){return (x !== false) && existy(x)};
-      function fail(thing){
-        throw new Error(thing);
-      }
-
-      function doWhen(cond, action){
-        if(truthy(cond))
-          return action();
-        else
-          return undefined;
-      }
-
-      // this function is a 'combinator'
-      function always(VALUE){
-        return function(){
-          return VALUE;
-        };
-      }
 
       function repeatedly(times, fun){
         return _.map(_.range(times), fun);
@@ -40,24 +22,6 @@
       console.log(f() === g());
 
       console.log(repeatedly(3,always("Odelay!")));
-
-      // this function takes a method and returns a function
-      // that will invoke that method on any object given
-      function invoker(NAME, METHOD){
-
-        return function(target /* args...*/){
-          if(!existy(target)) fail("Must provide a target");
-
-          var targetMethod = target[NAME];
-
-          var args = _.rest(arguments);
-
-          return doWhen((existy(targetMethod) && METHOD === targetMethod),
-            function(){
-              return targetMethod.apply(target, args);
-            });
-        };
-      }
 
       var rev = invoker('reverse', Array.prototype.reverse);
       console.log(_.map([[1,2,3]], rev));

@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>Essence of Functional Composition</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
+  </head>
+  <body>
+    <script>
+
+      // this function takes one or more functions
+      // and keeps trying to invoke each in turn,
+      // until a non-undefined value is returned
+      // this is an imperative approach
+      function dispatch(){
+        var funs = _.toArray(arguments);
+        var size = funs.length;
+
+        return function(target){
+          var ret = undefined;
+          var args = _.rest(arguments);
+
+          for(var funIndex = 0; funIndex < size; funIndex++){
+            var fun = funs[funIndex];
+            ret = fun.apply(fun, construct(target, args));
+
+            if(existy(ret)) return ret;
+          }
+
+          return ret;
+        };
+      }
+
+      var str = dispatch(invoker('toString', Array.prototype.toString),
+                        invoker('toString', String.prototype.toString));
+
+      console.log(str("a"));
+      console.log(str(_.range(10)));
+
+      // the use of dispatch is not dependent on the use of invoker
+      // but instead adheres to a certain contract.  We can tap into this contract
+      // by supplying a function that adheres to teh contract at hand
+      function stringReverse(s){
+        if(!_.isString(s)) return undefined;
+        return s.split('').reverse().join("");
+      }
+
+      console.log(stringReverse("abc"));
+      console.log(stringReverse(1));
+
+      // Now stringReverse can be composed with Array#reverse method to define
+      // a new polymorphic function, rev
+      var rev = dispatch(invoker('reverse', Array.prototype.reverse), stringReverse);
+      console.log(rev([1,2,3]));
+      console.log(rev("abc"));
+
+      // a function created by dispatch can also be an argument to dispatch
+      // for max flexibility
+      var sillyReverse = dispatch(rev, always(42));
+      console.log(sillyReverse([1,2,3]));
+      console.log(sillyReverse("abc"));
+      console.log(sillyReverse(100000));
+
+      // dispatch eliminates the command/switch pattern
+      function performCommandHardCoded(command){
+        var result;
+
+        switch(command.type){
+          case 'notify':
+            result = console.log('notify');
+            break;
+          case 'join':
+            result = console.log('join');
+            break;
+          default:
+            console.log('problem');
+
+        }
+        return result;
+      }
+
+      // this can be eliminated with our dispatch
+      var performCommand = dispatch(isa('notify', function(obj){return console.log('notify');}),
+        isa('join', function(obj){ return console.log('join');}),
+        function(obj) {console.log('problemo');});
+
+      console.log(performCommand({type:'join', target:'waiting-room'}));
+    </script>
+  </body>
+</html>
