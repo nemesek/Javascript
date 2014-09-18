@@ -87,8 +87,17 @@
         isa('join',  function(obj){console.log('join');return true;}),
         function(obj){ console.log('problemo');});
 
-      var x = performCommand({type:'join', target:'waiting-room'});
+      performCommand({type:'join', target:'waiting-room'});
 
+      // we can extend performCommand by wrapping it another
+      // dispatch function
+      var performAdminCommand = dispatch(isa('kill', function(obj){
+        console.log('kill');
+        return true;
+      }), performCommand);
+
+      performAdminCommand({type:'kill', hostname:'localhost'});
+      performAdminCommand({type:'notify'});
     </script>
   </body>
 </html>
