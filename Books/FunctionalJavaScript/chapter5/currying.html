@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>Currying</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
+  </head>
+  <body>
+    <script>
+      // imperative approach
+      // not really currying
+      function rightAwayInvoker(){
+        var args = _.toArray(arguments);
+        var method = args.shift();
+        var target = args.shift();
+
+        return method.apply(target, args);
+      }
+
+      console.log(rightAwayInvoker(Array.prototype.reverse,[3,2,1]));
+
+      // using the already defined invoker...
+      // invocation is deferred
+      console.log(invoker('reverse', Array.prototype.reverse)([1,2,3]));
+
+      function leftCurryDiv(n){
+          return function(d){
+            return n/d;
+          };
+      }
+
+      function rightCurryDiv(d){
+        return function(n){
+          return n/d;
+        };
+      }
+
+      var divide10By = leftCurryDiv(10);
+      console.log(divide10By(2));
+      var divideBy10 = rightCurryDiv(10);
+      console.log(divideBy10(2));
+
+    </script>
+  </body>
+</html>
