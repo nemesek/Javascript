@@ -23,7 +23,8 @@
             var fun = funs[funIndex];
             ret = fun.apply(fun, construct(target, args));
 
-            if(existy(ret)) return ret;
+            if(existy(ret))
+              return ret;
           }
 
           return ret;
@@ -78,12 +79,16 @@
         return result;
       }
 
-      // this can be eliminated with our dispatch
-      var performCommand = dispatch(isa('notify', function(obj){return console.log('notify');}),
-        isa('join', function(obj){ return console.log('join');}),
-        function(obj) {console.log('problemo');});
+      console.log('stuff is about to get real');
 
-      console.log(performCommand({type:'join', target:'waiting-room'}));
+      // this can be eliminated with our dispatch
+      var performCommand = dispatch(
+        isa('notify', function(obj){console.log('notify');return true;}),
+        isa('join',  function(obj){console.log('join');return true;}),
+        function(obj){ console.log('problemo');});
+
+      var x = performCommand({type:'join', target:'waiting-room'});
+
     </script>
   </body>
 </html>
