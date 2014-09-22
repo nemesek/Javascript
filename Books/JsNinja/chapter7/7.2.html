@@ -1,0 +1,22 @@
+<html>
+<head>
+	<title>Two ways to create a compiled regular expression</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<script type="text/javascript">
+		// creates a regex via a literal
+		var re1 = /test/i;
+
+		// creates a regex via the constructor
+		var re2 = new RegExp("test", "i");
+
+		assert(re1.toString() == "/test/i", "Verify the contents of the expression.");
+		assert(re1.test("TesT"), "Yes, it's case-insensitive.");
+		assert(re2.test("TesT"), "This one is too.");
+		assert(re1.toString() == re2.toString(), "The regular expressions are equal.");
+		assert(re1 != re2, "But they aredifferent objects.");
+	</script>
+</body>
+</html>

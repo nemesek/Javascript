@@ -1,0 +1,23 @@
+<html>
+<head>
+	<title>Compiling a runtime regular expression for later use</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<div class="samurai ninja"></div>
+	<div class = "ninja samurai"></div>
+	<div></div>
+	<span class="samurai ninja ronin"></span>
+
+	<script type="text/javascript">
+		function findClassInElements(className, type){
+			// collect elements by type
+			var elems = document.getElementsByTagName(type || "*");
+
+			// compiles a regex using the passed class name
+			var regex = new RegExp("(^|\\s)" + className + "(\\s|$)")
+		}
+	</script>
+</body>
+</html>

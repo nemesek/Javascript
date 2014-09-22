@@ -1,0 +1,44 @@
+<html>
+<head>
+	<title>Testing for a specific pattern in a string</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<script type="text/javascript">
+		// inelegant approach
+		function isThisAZipCode(candidate){
+			// short circuit obviously bogus candidates
+			if(typeof candidate !== "string" || candidate.length != 10) return false;
+
+			for(var n = 0; n < candidate.length; n++){
+				var c = candidate[n];
+
+				// Performs test based on character index
+				switch(n){
+					case 0: case 1: case 2: case 3: case 4:
+					case 6: case 7: case 8: case 9:
+						if(c < '0' || c > '9') return false;
+						break;
+					case 5:
+						if(c != '-') return false;
+						break;
+				}
+			}
+
+			return true;
+		}
+
+		function isThisAZipCode2(candidate){
+			return /^\d{5}-\d{4}$/.test(candidate);
+		}
+
+		assert(isThisAZipCode('98052-9999'), 'Yes it is.');
+		assert(isThisAZipCode2('98052-9999'), 'Yes it is.');
+		assert(!isThisAZipCode('38655-88D9'), 'Nope');
+		assert(!isThisAZipCode2('38655-88D9'), 'Nope');
+
+
+	</script>
+</body>
+</html>
