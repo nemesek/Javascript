@@ -18,7 +18,28 @@ function doWhen(cond, action){
   else
     return undefined;
 }
+function checker(){
+  var validators = _.toArray(arguments);
 
+  return function(obj){
+    return _.reduce(validators, function(errs, check){
+      if(check(obj))
+        return errs;
+      else
+        return _.chain(errs).push(check.message).value();
+    },[]);
+  };
+}
+// better to have a specific api for creating api's rather than setting a
+// message property
+function validator(message, fun){
+  var f = function(){
+    return fun.apply(fun, arguments);
+  };
+
+  f['message'] = message;
+  return f;
+}
 // this function takes a method and returns a function
 // that will invoke that method on any object given
 function invoker(NAME, METHOD){
