@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>Grouping without capturing</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link type="text/css" rel="stylesheet" href="../assert.css"/>
+  </head>
+  <body>
+    <script>
+
+      // uses a passive subexpression
+      var pattern = /((?:ninja-)+)sword/;
+      var ninjas = "ninja-ninja-sword".match(pattern);
+
+      assert(ninjas.length == 2, "Only one capture was returned.");
+      assert(ninjas[1] == "ninja-ninja-", "Matched both words, without any extra captures.");
+      console.log(ninjas[0]);
+
+      var pattern2 = /(ninja-)+sword/;
+      var ninjas2 = "ninja-ninja-sword".match(pattern2);
+      console.log(ninjas2.length);
+      console.log(ninjas2[0]);
+      console.log(ninjas2[1]);
+      debugger;
+    </script>
+  </body>
+</html>
