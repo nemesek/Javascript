@@ -1,0 +1,24 @@
+<html>
+<head>
+	<title>A simple functionfor capturing an embedded </title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<div id="opacity" style="opacity:0.5;filter:alpha(opacity=50);"></div>
+	<script type="text/javascript">
+		function getOpacity(elem){
+			var filter = elem.style.filter;
+			if(filter) 
+
+			// decides what to return
+			return filter ? filter.indexOf("opacity") >= 0 ?
+				(parseFloat(filter.match(/opacity=([^])+/)[1]) / 100) + "" : "" : elem.style.opacity;
+		}
+
+		window.onload = function(){
+			assert(getOpacity(document.getElementById("opacity")) == "0.5", "The opacity of the element has been obtained.");
+		};
+	</script>
+</body>
+</html>
