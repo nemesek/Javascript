@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Matching escaped characters in a CSS selector</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link href="../assert.css" type="text/css" rel="stylesheet"/>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // This regular expression allows any sequence composed of a sequence
+      // of word characters, a backslash followed by any character
+      // even a backslash or both
+      var pattern = /^((\w+)|(\\.))+$/;
+
+      // Sets up various test subjects.  All should pass but the last
+      // which fails to escape its non-word character (:)
+      var tests = [
+        "formUpdate",
+        "form\\.update\\.whatever",
+        "form\\:update",
+        "\\f\\o\\r\\m\\u\\p\\d\\a\\t\\e",
+        "form:update"
+      ];
+
+      for(var n=0; n < tests.length; n++){
+        assert(pattern.test(tests[n]), tests[n] + " is a valid identifier");
+      }
+    </script>
+  </body>
+</html>

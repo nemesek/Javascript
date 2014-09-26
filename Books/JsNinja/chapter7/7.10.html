@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <title>A technique for compressing a query string</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link href="../assert.css" type="text/css" rel="stylesheet"/>
+  </head>
+  <body>
+    <script>
+      function compress(source){
+        var keys = {};  // stores located keys
+
+        source.replace(
+          /([^=&]+)=([^&]*)/g,
+          function(full, key, value){
+            // Extracts key/value info
+            keys[key] = (keys[key] ? keys[key] + "," : "") + value;
+            return "";
+          }
+        );
+
+        // Collects key info
+        var result = [];
+        for(var key in keys){
+          result.push(key + "=" + keys[key]);
+        }
+
+        return result.join("&"); // joins results with &
+      }
+      var x = compress("foo=1&foo=2&blah=a&blah=b&foo=3");
+      console.log(x);
+      assert(x == "foo=1,2,3&blah=a,b", "Compression is OK!");
+    </script>
+  </body>
+</html>

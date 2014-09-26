@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>An alternative double-replacement trim implementation</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link href="../assert.css" type="text/css" rel="stylesheet"/>
+  </head>
+  <body>
+    <script>
+      function trim(str){
+        // trims using two replacements
+        return str.replace(/^\s\s*/,'').replace(/\s\s*$/,'');
+      }
+
+      var result = trim("  #id div.class ");
+      console.log(result);
+      assert(result == "#id div.class", "Extra whitespace trimemed.");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <title>A commong solution to stripping whitespace from a string</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link href="../assert.css" type="text/css" rel="stylesheet"/>
+  </head>
+  <body>
+    <script type="text/javascript">
+      function trim(str){ // trims a string without looping
+        return (str ||"").replace(/^\s+|\s+$/g,"");
+      }
+
+      assert(trim("  #id div.class ") == "#id div.class", "Extra whitespace trimmed from a selector string."); 
+    </script>
+  </body>
+</html>

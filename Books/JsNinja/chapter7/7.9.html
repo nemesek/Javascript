@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <title>Converting a dashed string to camel case</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link rel="stylesheet" href="../assert.css" type="text/css">
+  </head>
+  <body>
+    <script>
+      function upper(all, letter){return letter.toUpperCase();}
+
+      // matches dashed characters
+      assert("border-bottom-width".replace(/-(\w)/g, upper) == "borderBottomWidth",
+        "Camel cased a hyphenadted string.");
+    </script>
+  </body>
+</html>
