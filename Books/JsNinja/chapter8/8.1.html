@@ -1,0 +1,35 @@
+<html>
+<head>
+	<title>Two ways to create repeating timers</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<script type="text/javascript">
+		var i = 0;
+		// sets up a timeout that reschedules itself every 10ms
+		setTimeout(function repeatMe(){
+
+			if(i >= 25) console.log('done 1');
+				if(i < 25){
+					console.log('timeout' + i);
+					setTimeout(repeatMe,1000);			
+				}
+
+			
+		},1000);
+
+		// sets up an interval that triggers every 10ms
+		var id= setInterval(function(){
+			if(i >= 25) {
+				console.log('done 2')
+				clearInterval(id);
+			}
+				if( i < 25){
+					console.log('interval' + i);
+					i += 1;
+				}
+			}, 1000);
+	</script>
+</body>
+</html>
