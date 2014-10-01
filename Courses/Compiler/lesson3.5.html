@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>Building a mus to note compiler</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+          // maybe some helper functions
+    function buildMusArray(expr, songs){
+
+        if(expr.tag === 'seq'){
+            songs.concat(buildMusArray(expr.left, songs));
+            songs.concat(buildMusArray(expr.right, songs));
+
+        } else {
+          var song = {tag:'note', pitch:expr.pitch,dur:expr.dur};
+          songs.push(song);
+
+        }
+
+        return songs;
+
+    }
+
+    function buildNote(mus, time){
+        return {tag:'note', pitch:mus.pitch, start: time, dur:mus.dur};
+    }
+
+
+    function compile(musicexpr){
+       // returns array of NOTE songs
+        var musArray = buildMusArray(musicexpr, []);
+        var songs = [];
+        var start = 0;
+
+        for(var i = 0; i < musArray.length; i++){
+            var mus = musArray[i];
+            if(i > 0){ start += musArray[i-1].dur;}
+            var note = buildNote(mus, start);
+            songs.push(note);
+        }
+
+        return songs;
+
+    }
+
+    var expression = {
+      tag: 'seq',
+      left:{
+        tag: 'seq',
+        left: { tag: 'note', pitch: 'a4', dur: 250 },
+        right: { tag: 'note', pitch: 'b4', dur: 250 }
+        },
+      right:{
+         tag: 'seq',
+         left: { tag: 'note', pitch: 'c4', dur: 500 },
+         right: { tag: 'note', pitch: 'd4', dur: 500 }
+       }
+     };
+
+     var result = compile(expression);
+     console.log(result);
+    </script>
+  </body>
+</html>
