@@ -1,0 +1,38 @@
+<html>
+<head>
+	<title>A simple asynchronous test suite</title>
+</head>
+<body>
+	<script type="text/javascript">
+		(function(){
+			// retains state
+			var queue = [], paused = false;
+
+			// defines test registration function
+			this.test = function(fn){
+				queue.push(fn);
+				runTest();
+			};
+
+			// defines the function to pause testing
+			this.pause = function(){
+				paused = true;
+			};
+
+			// defines the function to resume testing
+			this.resume = function(){
+				paused = false;
+				setTimeout(runTest, 1);
+			};
+
+			// runs the tests
+			function runTest(){
+				if(!paused && queue.length){
+					queue.shift()();
+					if(!paused) resume();
+				}
+			}
+		})();
+	</script>
+</body>
+</html>
