@@ -4,20 +4,36 @@
   </head>
   <body>
     <script type="text/javascript">
-          // maybe some helper functions
-    function buildMusArray(expr, songs){
 
-        if(expr.tag === 'seq'){
-            songs.concat(buildMusArray(expr.left, songs));
-            songs.concat(buildMusArray(expr.right, songs));
 
+    function buildMusArray(expr, songs, parent){
+        var tag = expr.tag;
+        
+        if(tag === 'seq' || tag === 'par'){
+            songs.concat(buildMusArray(expr.left, songs, tag));
+            songs.concat(buildMusArray(expr.right, songs,tag));
         } else {
-          var song = {tag:'note', pitch:expr.pitch,dur:expr.dur};
-          songs.push(song);
-
+            var song = {tag:'note', pitch:expr.pitch,dur:expr.dur, parent: parent};
+            songs.push(song);
         }
-
+        
         return songs;
+        
+    }
+    // function endTime that takes a start time time in milliseconds and a MUS expression expr.
+    // Assuming expr starts playing at time time, the function should return the time when expr finishes.
+    function endTime (time, expr) {
+      if(!expr) return 0;
+
+      if(expr.tag === 'seq'){
+        return time + endTime(time,expr.left) + endTime(time, expr.right);
+      }
+    
+      return time + expr.dur;
+    };
+
+    // Assuming the notes start at time t, it returns the NOTE program that corresponds to expr.
+    function compileT(expr, time){
 
     }
 
@@ -26,23 +42,30 @@
     }
 
 
+    // a function that compiles MUS songs into NOTE songs
     function compile(musicexpr){
-       // returns array of NOTE songs
-        var musArray = buildMusArray(musicexpr, []);
-        var songs = [];
-        var start = 0;
-
-        for(var i = 0; i < musArray.length; i++){
-            var mus = musArray[i];
-            if(i > 0){ start += musArray[i-1].dur;}
-            var note = buildNote(mus, start);
-            songs.push(note);
-        }
-
-        return songs;
-
-    }
-
+    
+    // returns array of NOTE songs
+    var songs = buildMusArray(musicexpr, []);
+    var notes = [];
+    var start = 0;
+    var end = 0;
+    
+    for(var i = 0; i < songs.length; i++){
+        var mus = songs[i];
+        if(i > 0){ 
+            start += mus.parent === 'seq' || songs[i-1].parent === 'seq' ? songs[i-1].dur : 0;            
+          }
+          
+          var note = buildNote(mus, start);
+          notes.push(note);
+      }
+    
+    return notes;
+    
+}
+    
+    // works
     var expression = {
       tag: 'seq',
       left:{
@@ -57,7 +80,45 @@
        }
      };
 
-     var result = compile(expression);
+    var expression1 = {
+      tag: 'seq',
+      left:{
+        tag: 'par',
+        left: { tag: 'note', pitch: 'a4', dur: 250 },
+        right: { tag: 'note', pitch: 'b4', dur: 250 }
+        },
+      right:{
+         tag: 'par',
+         left: { tag: 'note', pitch: 'c4', dur: 500 },
+         right: { tag: 'note', pitch: 'd4', dur: 500 }
+       }
+     };
+
+     var expression2 = { 
+      tag: 'par',
+      left: {tag: 'note', pitch: 'c4', dur: 250 },
+      right:{ 
+        tag: 'par',
+        left: { tag: 'note', pitch: 'e4', dur: 250 },
+        right: { tag: 'note', pitch: 'g4', dur: 250 } } 
+      }
+
+      // works
+    var expression3 = {
+      tag: 'seq',
+      left:{
+        tag: 'seq',
+        left: { tag: 'note', pitch: 'a4', dur: 250 },
+        right: { tag: 'note', pitch: 'b4', dur: 250 }
+        },
+      right:{
+         tag: 'par',
+         left: { tag: 'note', pitch: 'c4', dur: 500 },
+         right: { tag: 'note', pitch: 'd4', dur: 500 }
+       }
+     };
+
+     var result = compile(expression1);
      console.log(result);
     </script>
   </body>
