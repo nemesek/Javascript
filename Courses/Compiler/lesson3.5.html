@@ -21,7 +21,7 @@
         return array;
     }
 
-    function buildNote(mus, time, parent){
+    function buildNote(mus, time){
         return {tag:'note', pitch:mus.pitch, start: time, dur:mus.dur};
     }
 
@@ -73,19 +73,18 @@
     function compile(musicexpr){
     
     // returns array of NOTE songs
-    //var songs = buildMusArray(musicexpr, []);
-    var songs = postOrderTraversal(musicexpr, []);
+    var songTree = postOrderTraversal(musicexpr, []);
     var notes = [];
     var note;
     var latestNote;
     var start = 0;
     
-    for(var i = 0; i < songs.length; i++){
-        var mus = songs[i];
+    for(var i = 0; i < songTree.length; i++){
+        var mus = songTree[i];
 
         if(mus.tag !== 'note') continue;
 
-        var parent = findNoteParentTag(i, songs);
+        var parent = findNoteParentTag(i, songTree);
         
         if(i === 0){
 
@@ -105,21 +104,18 @@
           // if we are a left note we need to look at our grandparent
           // if we are a right note leave start time as it is
           latestNote = notes[notes.length - 1];
-          var grandParentTag = findNoteGrandParentTag(i, songs);
+          var grandParentTag = findNoteGrandParentTag(i, songTree);
           // start += latestNote.parent === 'seq' ? latestNote.dur : 0;
-          if(!isRightNote(i, songs)){
+          if(!isRightNote(i, songTree)){
             start += grandParentTag === 'seq' ? latestNote.dur : 0; 
           }
-          
-          
         }
           
         note = buildNote(mus, start);
         notes.push(note);
       }
     
-    return notes;
-    
+    return notes;    
 }
     
     // works
