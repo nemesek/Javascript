@@ -5,40 +5,67 @@
   <body>
     <script type="text/javascript">
 
+    function postOrderTraversal(expr, array){
 
-    function buildMusArray(expr, songs, parent){
-        var tag = expr.tag;
-        
-        if(tag === 'seq' || tag === 'par'){
-            songs.concat(buildMusArray(expr.left, songs, tag));
-            songs.concat(buildMusArray(expr.right, songs,tag));
-        } else {
-            var song = {tag:'note', pitch:expr.pitch,dur:expr.dur, parent: parent};
-            songs.push(song);
+        if(!expr) return [];
+
+        if(expr.tag === 'note'){
+            var song = {tag:'note', pitch:expr.pitch,dur:expr.dur};
+            array.push(song);
+            return array;
         }
-        
-        return songs;
-        
-    }
-    // function endTime that takes a start time time in milliseconds and a MUS expression expr.
-    // Assuming expr starts playing at time time, the function should return the time when expr finishes.
-    function endTime (time, expr) {
-      if(!expr) return 0;
 
-      if(expr.tag === 'seq'){
-        return time + endTime(time,expr.left) + endTime(time, expr.right);
-      }
-    
-      return time + expr.dur;
-    };
-
-    // Assuming the notes start at time t, it returns the NOTE program that corresponds to expr.
-    function compileT(expr, time){
-
+        array.concat(postOrderTraversal(expr.left, array));
+        array.concat(postOrderTraversal(expr.right, array));
+        array.push({tag: expr.tag, pitch:expr.pitch,dur:expr.dur});
+        return array;
     }
 
-    function buildNote(mus, time){
+    function buildNote(mus, time, parent){
         return {tag:'note', pitch:mus.pitch, start: time, dur:mus.dur};
+    }
+
+    function findNoteParentTag(index, array){
+
+      if(index === array.length - 1) return "";
+
+      var tag = array[index+1].tag;
+
+      if(isParentTag(tag)){
+        return tag;
+      }
+
+      index += 1;
+      return findNoteParentTag(index, array);
+
+    }
+
+    function isParentTag(tag){
+      return tag === 'seq' || tag === 'par';
+    }
+
+    function findNoteGrandParentTag(index, array){
+      
+      var count = 0;
+      var tag;
+
+      while(count < 2 && index < array.length){
+        index += 1;
+        tag = array[index].tag;
+      
+        if(isParentTag(tag)){
+         count += 1;
+        }  
+      }
+
+      return tag;   
+    }
+
+    function isRightNote(index, array){
+      if(index === array.length - 1) return false;
+
+      var tag = array[index + 1].tag;
+      return isParentTag(tag);
     }
 
 
@@ -46,19 +73,49 @@
     function compile(musicexpr){
     
     // returns array of NOTE songs
-    var songs = buildMusArray(musicexpr, []);
+    //var songs = buildMusArray(musicexpr, []);
+    var songs = postOrderTraversal(musicexpr, []);
     var notes = [];
+    var note;
+    var latestNote;
     var start = 0;
-    var end = 0;
     
     for(var i = 0; i < songs.length; i++){
         var mus = songs[i];
-        if(i > 0){ 
-            start += mus.parent === 'seq' || songs[i-1].parent === 'seq' ? songs[i-1].dur : 0;            
+
+        if(mus.tag !== 'note') continue;
+
+        var parent = findNoteParentTag(i, songs);
+        
+        if(i === 0){
+
+          note = buildNote(mus, start);
+          notes.push(note);
+          continue;
+        }        
+
+        if(parent === 'seq'){
+
+          // check against notes array to get start time
+          latestNote = notes[notes.length - 1];
+          start += latestNote.dur;
+
+        } else{
+
+          // if we are a left note we need to look at our grandparent
+          // if we are a right note leave start time as it is
+          latestNote = notes[notes.length - 1];
+          var grandParentTag = findNoteGrandParentTag(i, songs);
+          // start += latestNote.parent === 'seq' ? latestNote.dur : 0;
+          if(!isRightNote(i, songs)){
+            start += grandParentTag === 'seq' ? latestNote.dur : 0; 
           }
           
-          var note = buildNote(mus, start);
-          notes.push(note);
+          
+        }
+          
+        note = buildNote(mus, start);
+        notes.push(note);
       }
     
     return notes;
@@ -80,6 +137,7 @@
        }
      };
 
+     // works
     var expression1 = {
       tag: 'seq',
       left:{
@@ -94,6 +152,7 @@
        }
      };
 
+     // works
      var expression2 = { 
       tag: 'par',
       left: {tag: 'note', pitch: 'c4', dur: 250 },
@@ -118,7 +177,7 @@
        }
      };
 
-     var result = compile(expression1);
+     var result = compile(expression3);
      console.log(result);
     </script>
   </body>
