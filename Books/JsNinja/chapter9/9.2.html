@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <title>Testing returned values from eval()</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link href="../assert.css" rel="stylesheet" type="text/css"/>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // creates an object from a string containing an object literal and
+      // tests that not only was the object created, but that it
+      // has the expected name property
+      var ninja = eval("({name:'Ninja'})");
+      assert(ninja != undefined, "the ninja was created");
+      assert(ninja.name === "Ninja", "and with the expected name property");
+
+      // creates a function from a function literal in a string and tests that
+      // the function was created and returns the expected value when called
+      var fn = eval("(function(){return 'Ninja';})");
+      assert(typeof fn === 'function', "the function was created");
+      assert(fn() === 'Ninja', "and returns expected value");
+
+      // tries to create another version of the first test, leaving off
+      // the parentheses.  The first test passes(something is created)
+      // but the second test fails because the object was not created as
+      // expected (Poke around in a debugger to see what was created)
+      var ninja2 = eval("{name:'Ninja'}");
+      assert(ninja2 != undefined, "ninja2 was created.");
+      assert(ninja2.name === 'Ninja', "and with the expected property");
+    </script>
+  </body>
+</html>
