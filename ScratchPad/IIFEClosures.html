@@ -1,0 +1,140 @@
+<html>
+<head>
+	<title>Testing closures scopes with passed in refs</title>
+</head>
+<body>
+	<script type="text/javascript">
+		var myNS = {};
+		(function(){
+
+			myNS.foo = function(bar){
+
+				var name = bar.character;
+				var sayName = bar.sayName;
+				var globalFuncRef = bar.funcThatReferencesGlobal;
+
+				return{
+					name: name,
+					whatsMyName: sayName,
+					globalFuncRef: globalFuncRef
+				};
+			};
+
+			return myNS.foo;
+		})();
+
+      // set  another global to see if he gets clobbered
+      var myObject ={
+        character: "Walter White",
+        sayName : function(){
+          console.log("Heisenberg");
+        },
+        funcThatReferencesGlobal: function(){
+          if(myObject.character){
+            console.log(myObject.character);  // this dude wil eventually get stomped on
+          } else{
+            console.log('Stomped');
+          }
+        }
+      };
+
+      // test first init
+      console.log('first test');
+      var scopedFoo = myNS.foo(myObject);
+      console.log(scopedFoo.name);
+      scopedFoo.whatsMyName();
+      scopedFoo.globalFuncRef();
+
+      // redefine the sayName function...no effect
+      myObject.sayName = function(){
+        console.log("Stringer's the name");
+      };
+
+      console.log('second test after redefining sayName');
+	  console.log(scopedFoo.name);
+      scopedFoo.whatsMyName();
+      scopedFoo.globalFuncRef();
+
+    	// will my global get clobbered?
+      var myObject={
+        character :"Avon",
+        sayName : function(){
+          console.log("Barksdale is the name");
+        }
+      }
+
+      console.log('third test after clobbering myObject');
+	  console.log(scopedFoo.name);
+      scopedFoo.whatsMyName();
+      scopedFoo.globalFuncRef();	// still partially works even though it's not defined on myObject anymore
+
+      myObject.funcThatReferencesGlobal = function(){
+      	console.log(myObject.character);
+      };
+
+      Foo2 = function(bar){
+      	var self = this;
+      	this.name = bar.character;
+      	this.sayName = bar.sayName;
+      	this.globalFuncRef = bar.funcThatReferencesGlobal;
+      };
+
+      var scopedFoo2 = new Foo2(myObject);
+      console.log('testing non IIFE');
+      console.log(scopedFoo2.name);
+      scopedFoo2.sayName();
+      scopedFoo2.globalFuncRef(); 
+
+    	// redefine the sayName function...no effect
+      myObject.sayName = function(){
+        console.log("Stringer's the name");
+      };
+
+      console.log('test 2 non IIFE');
+      console.log(scopedFoo2.name);
+      scopedFoo2.sayName();
+      scopedFoo2.globalFuncRef(); 
+
+      console.log('test 3 non IIFE');
+      var myObject={
+        character :"Pinkman",
+        sayName : function(){
+          console.log("Pinkman is the name");
+        }
+      }
+
+      console.log(scopedFoo2.name);
+      scopedFoo2.sayName();
+      scopedFoo2.globalFuncRef(); 
+
+      // mess with the object's name
+      scopedFoo2.name = 'Dan';
+      console.log('just messed with the name');
+      console.log(scopedFoo2.name);
+      scopedFoo2.sayName();
+      scopedFoo2.globalFuncRef(); 
+
+      // trying with first obj
+      scopedFoo.name = 'Nemesek';
+      console.log(scopedFoo.name);
+
+      Foo3 = function(bar){
+      	this.sayName = function(){
+      		bar.sayName();
+      	}
+      };
+
+      console.log('last and final test');
+      var scopedFoo3 = new Foo3(myObject);
+      scopedFoo3.sayName();
+      myObject.sayName = function(){
+      		console.log("Blah Blah Blah");
+      };
+
+      scopedFoo3.sayName();
+
+
+
+	</script>
+</body>
+</html>
