@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>Decompiling a function into a string</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link type="text/css" rel="stylesheet" href="../assert.css"/>
+  </head>
+  <body>
+    <script type="text/javascript">
+      function test(a){return a + a;}
+
+      assert(test.toString() === "function test(a){return a + a;}",
+        "Function decompiled.");
+    </script>
+  </body>
+</html>

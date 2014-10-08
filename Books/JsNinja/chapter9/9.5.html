@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>A function for finding the argument names of a function</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link type="text/css" rel="stylesheet" href="../assert.css"/>
+  </head>
+  <body>
+      <script type="text/javascript">
+        function argumentNames(fn){
+          // finds the argument list
+          //var found = /^[\s\(]*function[^(]*\(\s*([^)]*?)\s*\)/.exec(fn.toString());
+          var found = /^[\s\s(]*function[^(]*\(\s*([^)]*?)\s*\)/.exec(fn.toString());
+
+          // splits the list
+          return found && found[1] ? found[1].split(/,\s*/) : [];
+        }
+
+        assert(argumentNames(function(){}).length === 0, "Works on zero-arg functions.");
+        assert(argumentNames(function(x){})[0] === "x", "Single argument working.");
+        var results = argumentNames(function(a,b,c,d,e){});
+        console.log(results);
+
+        assert(results[0] == 'a' && results[1] == 'b' && results[2] == 'c' &&
+          results[3] == 'd' && results[4] == 'e', "Multiple arguments working.");
+      </script>
+  </body>
+</html>

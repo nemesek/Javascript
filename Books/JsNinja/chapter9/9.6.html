@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>Converting a JSON string into a JavaScript object</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link type="text/css" rel="stylesheet" href="../assert.css"/>
+  </head>
+  <body>
+      <script type="text/javascript">
+        // defines the source JSON that represents an object
+        // with a single property
+        var json = '{"name": "Ninja"}';
+
+        // converts the JSON to a JavaScript object
+        var object = eval("(" + json + ")");
+
+        assert(object.name === "Ninja", "My name is Ninja.");
+      </script>
+  </body>
+</html>

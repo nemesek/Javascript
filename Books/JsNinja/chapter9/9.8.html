@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <title>Creating a script tag type that executes only after the page has loaded</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link type="text/css" rel="stylesheet" href="../assert.css"/>
+  </head>
+  <body>
+      <script type="text/javascript">
+        function globalEval(data){
+          data = data.replace(/^\s*|\s*$/g, "");
+
+          if(data){
+            var head = document.getElementsByTagName("head")[0] || document.documentElement,
+              script = document.createElement("script");  // creates a script node
+              script.type = "text/javascript";
+              script.text = data;
+
+              // Attaches to the DOM
+              // this causes the script to be evaluated in the global scope
+              head.appendChild(script);
+
+              // Blows it away
+              head.removeChild(script);
+          }
+        }
+        window.onload = function(){
+          // finds all script blocks
+          var scripts = document.getElementsByTagName("script");
+
+          // locates and executes x/onload blocks
+          for(var i = 0; i < scripts.length; i++){
+            if(scripts[i].type == "x/onload"){
+              globalEval(scripts[i].innerHTML);
+            }
+          }
+        };
+      </script>
+      <script type="x/onload">
+        assert(true, "Executed on page load");
+      </script>
+  </body>
+</html>
