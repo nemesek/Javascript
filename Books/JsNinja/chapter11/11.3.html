@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Putting feature simulation into practice to work around a browser bug</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link href="../assert.css" rel="stylesheet" type="text/css"/>
+  </head>
+  <body>
+      <div><!-- comment #1 --></div>
+      <div><!-- comment #2 --></div>
+
+      <script type="text/javascript">
+
+        function getAllElements(name){
+          // tests if we already know whether browser works as expected
+          if(!window.findByTagWorksAsExpected){
+
+            // if not, determines if the features works as expected in
+            // the browser or is broken
+            window.findByTagWorksAsExpected = (function(){
+              var div = document.createElement("div");
+              div.appendChild(document.createComment("test"));
+              return div.getElementsByTagName("*").length === 0;
+            })();
+          }
+
+          // calls suspect feature and stores result
+          var allElements = document.getElementsByTagName('*');
+
+          // Fixes things up if we know that browser is buggy
+          if(!window.findByTagWorksAsExpected){
+            for(var n = allElements.length - 1; n >=0; n--){
+              if(allElements[n].nodeType === 1)
+                allElements.splice(n,1);
+            }
+          }
+          return allElements;
+        }
+
+        var elements = getAllElements();
+        var elementCount = elements.length;
+
+        for(var n=0; n < elementCount; n++){
+          assert(elements[n].nodeType === 1, "Node is an element node");
+        }
+
+      </script>
+  </body>
+</html>

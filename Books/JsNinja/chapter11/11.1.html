@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>Using hasOwnProperty() to test for inherited properties</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link href="../assert.css" rel="stylesheet" type="text/css"/>
+  </head>
+  <body>
+      <script type="text/javascript">
+        // Sets up an inherited property
+        Object.prototype.ronin = "ronin";
+
+        // sets up non inherited property
+        var object = {ninja: 'value'};
+        object.samurai = 'samurai';
+
+        assert(object.hasOwnProperty('ronin'), 'ronin is  a property');
+        assert(object.hasOwnProperty('ninja'), 'ninja is a property');
+        assert(object.hasOwnProperty('samurai'), 'samurai is a property');
+      </script>
+  </body>
+</html>
