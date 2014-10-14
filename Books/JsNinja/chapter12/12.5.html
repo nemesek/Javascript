@@ -1,0 +1,26 @@
+<html>
+<head>
+	<title>Demonstrating the URL normalization issue</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<a href="listing-12-5.html" id="testSubject">Self</a>
+
+	<script type="text/javascript">
+		var link = document.getElementById('testSubject');
+
+		// Obtains the original node value right from the horse's mouth (the node information)
+		var linkHref = link.getAttributeNode('href').nodeValue;
+
+		// tests that the original node value matches that specified in the element markup.  
+		assert(linkHref === 'listing-12-5.html', 'link node value is ok');
+
+		// tests that the href property contains what we'd expect; the same value
+		assert(link.href === 'listing-12-5.html', 'link property value is ok');
+
+		// tests that attribute value is what we expect
+		assert(link.getAttribute('href') === linkHref, 'link attribute not modified');
+	</script>
+</body>
+</html>

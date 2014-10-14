@@ -1,0 +1,25 @@
+<html>
+<head>
+	<title>Demonstrating how browsers strong-arm form element</title>
+	<script type="text/javascript" src="../assert.js"></script>	
+	<link rel="stylesheet" type="text/css" href="../assert.css"/>
+</head>
+<body>
+	<form id="testForm" action="/">
+		<input type="text" id="id"/>
+		<input type="text" name="action"/>
+	</form>
+
+	<script type="text/javascript">
+		window.onload = function(){
+			var form = document.getElementById('testForm');
+
+			// tests if properties have been stomed upon
+			assert(form.id === 'testForm', "the id property is untouched");
+			assert(form.action === '/', "the action property is untouched");
+			assert(form.getAttribute('id') === 'testForm', "the id attribute is untouched");
+			assert(form.getAttribute('action') === '/', "the action attribute is untouched");
+		};
+	</script>
+</body>
+</html>
