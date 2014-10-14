@@ -1,0 +1,39 @@
+<html>
+<head>
+	<title>Examining the style property</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css"/>
+</head>
+<body>
+	<!-- Declares an in-page style sheet that applies font size and border information -->
+	<style>
+		div {font-size: 1.8em; border: 0 solid gold;}
+	</style>
+
+	<!-- This test element should receive multiple styles from various places, including its own style attribute and the style sheet -->
+	<div style="color:#000;" title="Ninja power!">
+		ninja text
+	</div>
+
+	<script type="text/javascript">
+		window.onload = function(){
+			var div = document.getElementsByTagName("div")[0];
+
+			// tests that the inlined color style was recorded
+			assert(div.style.color == 'rgb(0, 0, 0)' || div.style.color == '#000', 'color was recorded');
+
+			// tests that the inherited font size style was recorded
+			assert(div.style.fontSize == '1.8em', 'fontSize was recorded');
+
+			// tests that the inherited border width style was recorded
+			assert(div.style.borderWidth == '0', 'borderWidth was recorded');
+
+			// replaces the border width style
+			div.style.borderWidth = "4px";
+
+			// tests it
+			assert(div.style.borderWidth == '4px', 'borderWidth was replaced');
+		};
+	</script>
+</body>
+</html>
