@@ -1,0 +1,19 @@
+<html>
+<head>
+	<title>Determining if a browser supports opacity or not</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css"/>
+</head>
+<body>
+	<img src="../ninja-code/images/ninja-with-nunchuks.png" style="opacity: .5;">
+
+	<script type="text/javascript">
+		// checks for support
+		var div = document.createElement("div");
+		div.setAttribute('style', 'opacity:.5');
+		var OPACITY_SUPPORTED = div.style.opacity === "0.5";
+
+		assert(OPACITY_SUPPORTED, "Opacity is supported");
+	</script>
+</body>
+</html>

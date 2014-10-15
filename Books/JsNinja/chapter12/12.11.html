@@ -1,0 +1,24 @@
+<html>
+<head>
+	<title>Determining how a browser formats color information</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<div style="background-color:darkslateblue">&nbsp;</div>
+	<div style="background-color:#369">&nbsp;</div>
+	<div style="background-color:#123456">&nbsp;</div>
+	<div style="background-color:rgb(44,88,168)">&nbsp;</div>
+	<div style="background-color:rgba(44,88,168,0.5)">&nbsp;</div>
+	<div style="background-color:hsl(120,100%,25%)">&nbsp;</div>
+	<div style="background-color:hsla(120,100%,25%,0.5)">&nbsp;</div>
+
+	<script type="text/javascript">
+		var divs = document.getElementsByTagName('div');
+
+		for(var n = 0; n < divs.length; n++){
+			assert(true, divs[n].style.backgroundColor);
+		}
+	</script>
+</body>
+</html>

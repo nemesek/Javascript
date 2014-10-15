@@ -1,0 +1,80 @@
+<html>
+<head>
+	<title>Grabbing the dimensions of hidden elements</title>
+	<script type="text/javascript" src="../assert.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assert.css">
+</head>
+<body>
+	<div>
+		blah blah blah, bee bee bee, dee dee
+		more stuff here
+		<img src="../ninja-code/images/ninja-with-pole.png" id="withPole"/>
+		<img src="../ninja-code/images/ninja-with-shuriken.png" id="withShuriken" style="display:none"/>
+		again more crap
+		againg and again
+		hotty toddy gosh almighty
+	</div>
+	<script type="text/javascript">
+		// creates a private scope
+		(function(){
+			var PROPERTIES = {	// defines target properties
+				position: "absolute",
+				visibility: "hidden",
+				display: "block"
+			};
+
+			// creates the new function
+			window.getDimensions = function(element){
+				// Remembers settings
+				var previous = {};
+
+				// replaces settings
+				for(var key in PROPERTIES){
+					previous[key] = element.style[key];
+					element.style[key] = PROPERTIES[key];
+				}
+
+				// fetches dimensions
+				var result = {
+					width: element.offsetWidth,
+					height: element.offsetHeight
+				};
+
+				// Restores settings
+				for(key in PROPERTIES){
+					element.style[key] = previous[key];
+				}
+
+				return result;
+			};
+
+		})();
+
+		window.onload = function(){
+			var withPole = document.getElementById('withPole'), withShuriken = document.getElementById('withShuriken');
+
+			setTimeout(function(){
+
+				// tests visible element
+				assert(withPole.offsetWidth == 41, "Pole image width fetched; actual: " + withPole.offsetWidth + ", expected: 41");
+				assert(withPole.offsetHeight == 48, "Pole image height fetched; actual: " + withPole.offsetHeight + ", expected: 48");
+
+				// tests hidden element
+				assert(withShuriken.offsetWidth == 36, "Shuriken image width fetched; actual " + withShuriken.offsetWidth + ", expected: 36");
+				assert(withShuriken.offsetHeight == 48, "Shuriken image height fetched; actual " + withShuriken.offsetHeight + ", expected: 48");
+
+				// uses new function
+				var dimensions = getDimensions(withShuriken);
+
+				// restests hidden elements
+				assert(dimensions.width == 36, "Shuriken image width fetched; actual: " + dimensions.width + ", expected: 36");
+				assert(dimensions.height == 48, "Shuriken image height fetched; actual: " + dimensions.height + ", expected: 48");
+
+
+			}, 3000);
+			
+		};
+	</script>	
+
+</body>
+</html>
