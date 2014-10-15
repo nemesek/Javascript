@@ -1,12 +1,6 @@
 <html>
 <head>
 	<title></title>
-</head>
-<body>
-	<div>Hello</div>
-	<br/>
-	<div>World</div>
-
 	<script type="text/javascript">
 		// checks for the DOM Model
 		if(document.addEventListener){
@@ -39,12 +33,16 @@
 
 			for(var i = 0; i < elems.length; i++)(function(elem){
 				var handler = addEvent(elem, "click", function(){
-					this.style.backgroundColor = this.style.backgroundColor == '' ? 'greeen' : '';
+					this.style.backgroundColor = this.style.backgroundColor == '' ? 'green' : '';
 					removeEvent(elem,"click", handler);
 				});
 			})(elems[i]);
 		});
 	</script>
-
+</head>
+<body>
+	<div>Hello</div>
+	<br/>
+	<div>World</div>
 </body>
 </html>
