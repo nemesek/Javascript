@@ -1,0 +1,23 @@
+<html>
+<head>
+	<title>Testing the event binding API</title>
+	<script type="text/javascript" src="13.1.js"></script>
+</head>
+<body>
+	<div>Hello</div>
+	<br/>
+	<div>World</div>
+	<script type="text/javascript">
+		addEvent(window, "load", function(){
+			var elems = document.getElementsByTagName("div");
+
+			for(var i = 0; i < elems.length; i++)(function(elem){
+				var handler = addEvent(elem, "click", function(){
+					this.style.backgroundColor = this.style.backgroundColor == '' ? 'greeen' : '';
+					removeEvent(elem,"click", handler);
+				});
+			})(elems[i]);
+		});
+	</script>
+</body>
+</html>
