@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>Implementing a central object store for DOM element information</title>
+    <script type="text/javascript" src="../assert.js"></script>
+    <link href="../assert.css" rel="stylesheet" type="text/css"/>
+  </head>
+  <body>
+      <div title="Ninja Power!">Japanese text</div>
+      <div title="Secrets">Secret text</div>
+      <script type="text/javascript">
+        (function(){
+          //establishes scoped storage
+          var cache = {},
+              guidCounter = 1,
+              expando = "data" + (new Date).getTime();
+
+          this.getData = function(elem){
+            var guid = elem[expando];
+            if(!guid){
+              guid = elem[expando] = guidCounter++;
+              cache[guid] = {};
+            }
+            return cache[guid];
+          };
+
+          this.removeData = function(elem){
+            var guid = elem[expando];
+            if(!guid) return;
+            delete cache[guid];
+            try{
+              delete elem[exapndo];
+            }
+            catch(e){
+              if(elem.removeAttribute){
+                elem.removeAttribute(expando);
+              }
+            }
+          };
+        })();
+
+        var elems = document.getElementsByTagName('div');
+
+        // Assigns associated data
+        for(var n = 0; n < elems.length; n++){
+          getData(elems[n]).ninja = elems[n].title;
+        }
+
+        // tests that data was stored
+        for(var n = 0; n < elems.length; n++){
+          assert(getData(elems[n]).ninja === elems[n].title,
+            "Stored data is " + getData(elems[n]).ninja);
+        }
+
+        // tests that data was destroyed
+        for(var n = 0; n < elems.length; n++){
+          removeData(elems[n]);
+          assert(getData(elems[n]) === undefined,
+            "Stored data has been destroyed");
+        }
+      </script>
+  </body>
+</html>
