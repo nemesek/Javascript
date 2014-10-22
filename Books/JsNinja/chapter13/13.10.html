@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>Using custom events</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="data.js"></script>
+    <script type="text/javascript" src="fixup.js"></script>
+    <script type="text/javascript" src="event.js"></script>
+    <script type="text/javascript" src="trigger.js"></script>
+    <style type="text/css">#whirlyThing { display: none;}</style>
+    <script type="text/javascript" src="ajaxy-operation.js"></script>
+    <script type="text/javascript">
+      // Adds a click handler to the button that will trigger a
+      // 5-second Ajax operation.  This handler knows nothing about
+      // the pinwheel image
+      addEvent(window, 'load', function(){
+        var button = document.getElementById('clickMe');
+        addEvent(button, 'click', function(){
+          performAjaxOperation(this);
+        });
+
+        var body = document.getElementsByTagName('body')[0];
+
+        // Establishes the handler for a custom named ajax-start
+        // on the body element that will cause the image to be displayed.
+        // There is no coupling with the code that reacts to the button click
+        addEvent(body, 'ajax-start', function(e){
+          document.getElementById('whirlyThing').style.display = 'inline-block';
+        });
+
+        // Establishes a handler for a custom event named ajax-complete on the body
+        // element that will cause the image to be hidden.  No coupling here either
+        addEvent(body, 'ajax-complete', function(e){
+          document.getElementById('whirlyThing').style.display = 'none';
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <!-- Creates the button to click on -->
+    <button type="button" id="clickMe">Start</button>
+    <!-- Defines the pinwheel image that should only be shown while an ajax operation
+    is under way -->
+    <img id="whirlyThing" src="whirly-thing.gif"/>
+  </body>
+</html>
