@@ -1,0 +1,50 @@
+<html>
+<head>
+	<title>Testing pass by ref</title>
+</head>
+<body>
+	<script type="text/javascript">
+
+		function func1(){console.log('hello');}
+		function func2(){console.log('hello again');}
+		function replace(ref) {
+		    ref = {};           // this code does _not_ affect the object passed
+		}
+
+		function modifyAndReturn(ref){
+			return b = {
+				key : ref.key,
+				func : ref.func
+			}
+		}
+
+		function Instance(ref){
+			var self = this;
+			self.ref = ref;
+			self.ref.name = 'blah';
+		}
+
+		function update(ref) {
+		    ref.key = 'newvalue';  // this code _does_ affect the _contents_ of the object
+		    ref.func = func2;
+		}
+
+		var a = { 
+			key: 'value',
+			func: func1
+		 };
+		replace(a);  // a still has its original value - it's unmodfied
+		var b = modifyAndReturn(a);
+		var instance = new Instance(a);
+		console.log(a.key);
+		a.func();
+		update(a);   // the _contents_ of 'a' are changed
+		console.log(a.key);
+		a.func();
+		b.func();
+		instance.ref.func();
+		console.log(a.name);
+		console.log(b.name);
+	</script>
+</body>
+</html>
