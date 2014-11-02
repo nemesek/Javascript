@@ -14,6 +14,7 @@
           foo: foo
         };
 
+        console.log('about to use object context, should be 2');
         obj.foo();  // call site uses the obj context to reference foo
 
         // only the top last/level of an object property reference
@@ -28,6 +29,7 @@
           obj2: obj2
         };
 
+        console.log('about to use child object context, should be 42')
         obj1.obj2.foo();
 
         // implicitly lost
@@ -38,8 +40,26 @@
 
         var bar = obj3.foo;
         a = "oops, global";
-        bar(); // call site is in global for call site bar not obj3 since bar and obj3.foo
+        console.log('not implicitly lost');
+        obj3.foo();
+
+        // call site is in global for call site bar not obj3 since bar and obj3.foo
         // are both just refs to foo
+        console.log('just implicitly lost, revert back to default binding')
+        bar();
+
+        // consider passing a callback function
+        function doFoo(fn){
+          // fn is just another reference to foo
+          fn(); // <- call site
+        }
+
+        console.log('still implicitly lost because callback hangs off object');
+        doFoo(obj.foo);
+
+        // consider passing a callback to a built in function
+        console.log('calling setTimeout, still implicitly lost');
+        setTimeout(obj.foo, 100);
       </script>
   </body>
 </html>

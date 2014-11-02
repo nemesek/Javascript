@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>Explicit Bindings</title>
+  </head>
+  <body>
+      <script type="text/javascript">
+        function foo(){
+          console.log(this.a);
+        }
+
+        var obj = {
+          a: 2
+        };
+
+        foo.call(obj);
+
+        // loss when passed as ref?
+        var a = 'oops global';
+        function doFoo(fn){
+          fn();
+        }
+        console.log('about to suffer explicit loss');
+        doFoo.call(obj, foo);
+
+        // hard binding
+        var bar = function(){
+          foo.call(obj);
+        };
+
+        console.log('hard bound');
+        bar();
+        setTimeout(bar, 100);
+
+        console.log('hard bound bar can no longer have its this overwritten');
+        bar.call(window);
+
+        // the most typical way to wrap a function with a hard binding
+        // creates a pass through of any any arguments passed
+        // and any return value received
+        function foo2(something){
+          console.log(this.a, something);
+          return this.a + something;
+        }
+
+        var bar2 = function(){
+          return foo2.apply(obj, arguments);
+        }
+
+        var b = bar2(3);
+        console.log(b);
+      </script>
+  </body>
+</html>
