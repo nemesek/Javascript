@@ -24,6 +24,23 @@
       var bar = bind(foo, obj);
       var b = bar(3);
       console.log(b);
+
+      // use the built in bind
+      var bar2 = foo.bind(obj);
+      var c = bar2(4);
+      console.log(c);
+
+      // api call contexts
+      function foo2(el){
+        console.log(el, this.id);
+      }
+
+      var obj2 = {
+        id: "awesome"
+      };
+
+      // use obj2 as this for foo2 calls
+      [1,2,3].forEach(foo2, obj2);
     </script>
   </body>
 </html>
