@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>Playing around with closure refs</title>
+  </head>
+  <body>
+      <script type="text/javascript">
+        for(var i = 0; i < 3; i++){
+          setTimeout(function(){
+            console.log(i);
+          },i * 1000);
+        }
+
+        for(var j = 0; j < 3; j++){
+          setTimeout((function(i){
+            console.log(i);
+          })(j), j*1000);
+        }
+
+        var fn1 = function(){console.log('hello')};
+
+        for(k = 0; k < 2; k++){
+          if(k > 0){
+            fn1 = function(){console.log('world')};
+          }
+          setTimeout(function(){
+            fn1();
+          },k * 1000);
+        }
+
+        var fn2 = function(){console.log('dan');}
+        for(var l = 1; l < 3; l++){
+          if(l > 1){
+            console.log('redefined fn2');
+            fn2 = function(){console.log('nemesek');
+            }
+          }
+          setTimeout((function(fn){
+            return function(){fn();};
+          })(fn2), l*1000);
+        }
+      </script>
+  </body>
+</html>

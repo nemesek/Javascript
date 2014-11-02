@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>What this really isn't</title>
+  </head>
+  <body>
+      <script type="text/javascript">
+
+        function foo(num){
+          console.log("foo " + num);
+          // keep track of how many times called (doesn't work)
+          // because the root objects are different
+          this.count++;
+        }
+
+        foo.count = 0;
+        var i;
+        for(var i = 0; i < 10; i++){
+          if(i > 5){
+            foo2(i);
+          }
+        }
+
+        console.log(foo.count);
+        // fixes the problem
+        // could also use the deprecated arguments.callee
+        function foo2(num){
+          console.log("foo " + num);
+          foo.count++;
+        }
+
+        // better approach is assign foo to this
+        var j;
+        for(var j = 6; j < 10; j++){
+          foo.call(foo,j);
+        }
+
+        console.log(foo.count);
+      </script>
+  </body>
+</html>

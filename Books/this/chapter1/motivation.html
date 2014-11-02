@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Motivation and utility</title>
+  </head>
+  <body>
+      <script type="text/javascript">
+        function identify(){
+          return this.name.toUpperCase();
+        }
+
+        function speak(){
+          var greeting = "Hello, I'm " + identify.call(this);
+          console.log(greeting);
+        }
+
+        var me = {
+          name: "Kyle"
+        };
+
+        var you = {
+          name: "reader"
+        };
+
+        // if we don't use call then nothing gets returned
+        console.log(identify.call(me));
+        console.log(identify.call(you));
+
+        speak.call(me);
+        speak.call(you);
+
+        // Instead of relying on this, you could have explicitly passed
+        // in a context object to both identify and speak
+        function identify2(context){
+          return context.name.toUpperCase();
+        }
+
+        function speak2(context){
+          var greeting = "Hello, I'm " + identify2(context);
+          console.log(greeting);
+        }
+
+        speak2(me);
+        speak2(you);
+      </script>
+  </body>
+</html>

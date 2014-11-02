@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title>Trying to use this to bridge scope between two functions</title>
+  </head>
+  <body>
+      <script type="text/javascript">
+        function foo(){
+          var a = 2;
+          this.bar(); // accident that this function will be invoked
+        }
+
+        function bar(){
+          console.log(this.a);  // this will bomb can't bridge the scopes
+        }
+        foo();
+      </script>
+  </body>
+</html>
