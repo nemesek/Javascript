@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>reference indirection</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      function foo(){
+        console.log(this.a);
+      }
+
+      var a = 2;
+      var o = {a: 3, foo: foo};
+      var p = {a: 4};
+
+      o.foo();  // 3
+      console.log('reference to just the underlying function object');
+      (p.foo = o.foo)();  // 2, curious as to why this executes foo, why not just an assignment
+      p.foo();  // 4, still don't understand the IIFE behavior or at least why it is diff
+      p.foo = o.foo;
+      p.foo();  // 4, curious as to why this behaves different than the IIFE
+      // what it i do this
+      console.log('IIFE again just a little different');
+      (function(){
+        p.foo = o.foo;  // no output
+      })();
+    </script>
+  </body>
+</html>
