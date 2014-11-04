@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Getters and Setters</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var myObject = {
+        // define a getter for a
+        get a(){
+          return 2;
+        }
+      }
+
+      Object.defineProperty(
+        myObject, // target
+        "b", // property name
+        {
+          // define a getter for b
+          get: function(){return this.a * 2;},
+          // make sure b shows up as an object property
+          enumerable: true
+        }
+      );
+
+      console.log(myObject.a);  // 2
+      console.log(myObject.b);  // 4
+
+      // setter doesn't work because not defined
+      myObject.a = 3;
+      console.log(myObject.a);  // 2
+
+      var myObject2 = {
+        get a(){
+          return this._a_;
+        },
+
+        set a(val){
+          this._a_ = val * 2;
+        }
+      };
+
+      myObject2.a = 2;
+      console.log(myObject2.a);  // 4
+    </script>
+  </body>
+</html>
