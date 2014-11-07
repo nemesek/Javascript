@@ -6,17 +6,32 @@
       <script type="text/javascript">
         var reactor = new Reactor();
 
-        reactor.registerEvent('big bang');
+        reactor.registerEvent('userInitialized');
 
-        reactor.addEventListener('big bang', function(){
-          console.log('This is big bang listener yo!');
+        var id1 = reactor.addEventListener('userInitialized', function(){
+          console.log('The Wrong VM is listening');
         });
 
-        reactor.addEventListener('big bang', function(){
-          console.log('This is another big bang listener yo!');
+        var id2 = reactor.addEventListener('userInitialized', function(){
+          console.log('PostLoginLayout VM got the user');
         });
 
-        reactor.dispatchEvent('big bang');
+        reactor.removeEventListener('userInitialized', id1);
+        var id3 = reactor.addEventListener('userInitialized', function(){
+          console.log('Meant to add Dashboard VM');
+        });
+
+        reactor.dispatchEvent('userInitialized');
+
+        var id4 = reactor.addEventListener('userInitialized', function(){
+          console.log('Profile VM');
+        });
+
+        //console.log('about to reset the event');
+        //reactor.resetEvent('big bang');
+        reactor.removeEventListener('userInitialized', id3);
+        console.log('dispatch the event again');
+        reactor.dispatchEvent('userInitialized');
       </script>
   </body>
 </html>
