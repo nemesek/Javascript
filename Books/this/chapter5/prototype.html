@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>Playing with prototypes</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      function Foo(){
+
+      }
+
+      var a = new Foo();
+      console.log(Object.getPrototypeOf(a) === Foo.prototype);  // true
+      console.log(Foo.prototype.constructor === Foo); // true
+      console.log(a.constructor === Foo);   // true
+
+      function Foo2(name){
+        this.name = name;
+      }
+
+      Foo2.prototype.name = function(){
+        return this.name;
+      };
+
+      var b = new Foo2('Dan');
+      var c = new Foo2('Jackson');
+      console.log(b.name);  // Dan
+      console.log(c.name);  // Jackson
+
+      // changing the prototype property so that the prototype will be resolved on Object
+      function Foo3(){}
+      Foo3.prototype = {};
+
+      var d = new Foo3();
+      console.log(d.constructor === Foo3);  // False
+      console.log(d.constructor === Object);  // True
+    </script>
+  </body>
+</html>
