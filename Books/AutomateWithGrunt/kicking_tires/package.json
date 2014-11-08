@@ -1,0 +1,14 @@
+{
+  "name": "kicking_tires",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "\"echo \\\"Error: no test specified\\\" &amp;&amp; exit 1\""
+  },
+  "author": "",
+  "license": "\"BSD-2-Clause\"",
+  "devDependencies": {
+    "grunt": "^0.4.5"
+  }
+}
