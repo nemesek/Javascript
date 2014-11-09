@@ -37,11 +37,17 @@ module.exports = function(grunt){
   grunt.registerTask('copyFiles', function(){
     var files, workingDirectory;
 
-    grunt.config.requires('copyFiles.options.manifest');
-    grunt.config.requires('copyFiles.options.workingDirectory');
-
-    files = grunt.config.get('copyFiles.options.manifest');
-    workingDirectory = grunt.config.get('copyFiles.options.workingDirectory');
+    //grunt.config.requires('copyFiles.options.manifest');
+    //grunt.config.requires('copyFiles.options.workingDirectory');
+    this.requiresConfig(this.name + '.options.manifest');
+    this.requiresConfig(this.name + '.options.workingDirectory');
+    //this.requiresConfig('clean');
+    //grunt.task.run('clean');
+    //grunt.task.requires('clean');
+    //files = grunt.config.get('copyFiles.options.manifest');
+    files = this.options().manifest;
+    //workingDirectory = grunt.config.get('copyFiles.options.workingDirectory');
+    workingDirectory = this.options().workingDirectory;
 
     files.forEach(function(item) {
       recursiveCopy(item, workingDirectory);
