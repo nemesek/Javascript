@@ -64,18 +64,6 @@
 			console.log(parseAge("dan"));	// 0
 
 			// a better approach is to abstract the notion of errors, warnings, etc
-			function fail(thing){
-				throw new Error(thing);
-			}
-
-			function warn(thing){
-				console.log(["Warning: ", thing].join(' '));
-			}
-
-			function note(thing){
-				console.log(["Note: ", thing].join(' '));
-			}
-
 			function parseAgeFunctional(age){
 				if(!_.isString(age)) fail("Expecting a string.");
 
@@ -103,33 +91,10 @@
 			}
 			console.log(parseAgeFunctional("Ava"));
 
-			function isIndexed(data){
-				return _.isArray(data) || _.isString(data);
-			}
-
-			function nth(a, index){
-				if(!_.isNumber(index)){
-					fail("Expected a number as index.");
-				}
-
-				if(!isIndexed(a)){
-					fail("Not supported on a non indexed type.");
-				}
-
-				if((index < 0) || index > a.length - 1){
-					fail("Index value is out of bounds.");
-				}
-
-				return a[index];
-			}
-
 			var letters = ['a', 'b', 'c', 'd'];
 			console.log(nth(letters, 1));	// b
 
-			// build on top of nth
-			function second(a){
-				return nth(a, 1);
-			}
+
 
 			console.log(second('fogus'));	// o
 			console.log(second(letters));	// b

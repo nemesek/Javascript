@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Data as Abstraction</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
+  </head>
+  <body>
+      <script type="text/javascript">
+        function lameCSV(str){
+          return _.reduce(str.split("\n"), function(table, row){
+            table.push(_.map(row.split(","), function(c){ return c.trim();}));
+            return table;
+          }, []);
+        }
+
+        var peopleTable = lameCSV("name, age, hair\nMerble, 35, red\nRob, 64, blonde");
+        console.log(peopleTable);
+
+        var sorted = _.rest(peopleTable).sort();
+        console.log(sorted);
+
+        function selectNames(table){
+          return _.rest(_.map(table, _.first));
+        }
+
+        var names = selectNames(peopleTable);
+        console.log(names);
+
+        function selectAges(table){
+          return _.rest(_.map(table, second));
+        }
+
+        var ages = selectAges(peopleTable);
+        console.log(ages);
+
+
+        function selectHair(table){
+          return _.rest(_.map(table, function(row){
+            return nth(row, 2);
+          }));
+        }
+
+        var hair = selectHair(peopleTable);
+        console.log(hair);
+
+        function executeIfHasField(target,name){
+          return doWhen(existy(target[name]), function(){
+            var result = _.result(target,name);
+            console.log(['The result  is', result].join(' '));
+            return result;
+          });
+        }
+
+        executeIfHasField([1,2,3], 'reverse');  // the result is 3,2,1
+        executeIfHasField({foo: 42}, 'foo');  // the result is 42
+        executeIfHasField([1,2,3], 'notHere');  // undefined
+      </script>
+  </body>
+</html>
