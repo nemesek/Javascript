@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <title>First class functions</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // example of a higher order function
+      _.each(['whiskey', 'tango', 'foxtrot'], function(word){
+        console.log(word.charAt(0).toUpperCase() + word.substr(1));
+      });
+
+      // imperative 99 bottles
+      var lyrics = [];
+
+      function songImperative(lyrics){
+        for(var bottles = 5; bottles > 0; bottles--){
+          lyrics.push(bottles + " bottles of beer on the wall");
+          lyrics.push(bottles + " bottles of beer.");
+          lyrics.push("Take one down, pass it around");
+
+          if(bottles > 1){
+            lyrics.push((bottles - 1) + " bottles of beer on the wall.");
+          } else{
+            lyrics.push("No more bottles of beer on the wall!");
+          }
+        }
+      }
+
+      songImperative(lyrics);
+      console.log(lyrics);
+
+      // a more functional solution
+		  function lyricSegment(n){
+      return _.chain(lyrics)
+        .push(n + " bottles of beer on the wall")
+        .push(n + " bottles of beer")
+        .push("Take one down, pass it around")
+        .tap(function(lyrics){
+          if(n > 1){
+            lyrics.push((n - 1) + " bottles of beer on the wall.");
+          } else
+            lyrics.push("No more bottles of beer on the wall!");
+        })
+        .value();
+    }
+
+      var lyrics2 = lyricSegment(5);
+      console.log(lyrics2);
+    </script>
+  </body>
+</html>
