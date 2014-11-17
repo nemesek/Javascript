@@ -29,24 +29,34 @@
 
       songImperative(lyrics);
       console.log(lyrics);
-
+      lyrics = [];
       // a more functional solution
+      // this function will output one verse of the song
 		  function lyricSegment(n){
-      return _.chain(lyrics)
-        .push(n + " bottles of beer on the wall")
-        .push(n + " bottles of beer")
-        .push("Take one down, pass it around")
-        .tap(function(lyrics){
-          if(n > 1){
-            lyrics.push((n - 1) + " bottles of beer on the wall.");
-          } else
-            lyrics.push("No more bottles of beer on the wall!");
-        })
-        .value();
-    }
+        return _.chain([])
+          .push(n + " bottles of beer on the wall")
+          .push(n + " bottles of beer")
+          .push("Take one down, pass it around")
+          .tap(function(lyrics){
+            if(n > 1){
+              lyrics.push((n - 1) + " bottles of beer on the wall.");
+            } else
+              lyrics.push("No more bottles of beer on the wall!");
+          })
+          .value();
+      }
 
-      var lyrics2 = lyricSegment(5);
-      console.log(lyrics2);
+      // var lyrics2 = lyricSegment(5);
+      // console.log(lyrics2);
+      lyrics2 = [];
+      function song(start, end, lyricGen){
+        return _.reduce(_.range(start,end,-1),
+          function(acc,n){
+            return acc.concat(lyricGen(n));
+          },[]);
+      }
+
+      console.log(song(5,0, lyricSegment));
     </script>
   </body>
 </html>
