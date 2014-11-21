@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <title>Applicative Programming</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // example of map
+      var nums = [1,2,3,4,5];
+
+      function doubleAll(array){
+        return _.map(array, function(n){return n*2;});
+      }
+
+      console.log(doubleAll(nums));
+
+      // example of reduce
+      function average(array){
+        var sum = _.reduce(array, function(a,b){
+          console.log(a + ',' + b);
+          return a + b;
+        });
+
+        return sum / _.size(array);
+      }
+
+      console.log(average(nums));
+
+      // example of filter
+      function onlyEven(array){
+        return _.filter(array, function(a){
+          return a % 2 === 0;
+        });
+      }
+
+      console.log(onlyEven(nums));
+
+      // observe the difference of reduce right
+      function div(x,y){return x/y;}
+
+      var nums2 = [100, 2, 25];
+      console.log(_.reduce(nums2, div)); // 2
+      console.log(_.reduceRight(nums2, div)); // 1.25
+
+      // some more reduce right usages
+      function allOf(){
+        return _.reduceRight(arguments, function(truth, f){
+          return truth && f();
+        }, true);
+      }
+
+      function anyOf(){
+        return _.reduceRight(arguments, function(truth, f){
+          return truth || f();
+        }, false);
+      }
+
+      function T(){return true;}
+      function F(){return false;}
+
+      console.log(allOf());  // true
+      console.log(allOf(T,T));  // true
+      console.log(allOf(T,T,T,F));  // false
+      console.log(anyOf()); // false
+      console.log(anyOf(F,F,T));  // true;
+
+      // example of find
+      console.log(_.find(['a', 'b', 3, 'd'], _.isNumber));  // 3
+      console.log(_.reject(['a', 'b', 3, 'd'], _.isNumber));  // a, b, d
+
+      var people = [{name: 'Rick', age:30}, {name:'Jaka', age:24}];
+      console.log(_.sortBy(people, function(p){return p.age;}));
+
+      var albums = [
+        {title:"Sabbath Bloody Sabbath", genre: "Metal"},
+        {title:"Scientist", genre: "Dub"},
+        {title:"Undertow", genre: "Metal"}
+
+      ];
+
+      console.log(_.groupBy(albums, function(a){return a.genre;}));
+      console.log(_.countBy(albums, function(a){return a.genre;}));
+    </script>
+  </body>
+</html>
