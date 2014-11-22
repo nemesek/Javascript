@@ -27,6 +27,42 @@
 
       var pluckResult = _.pluck(isbnResults, 'isbn');
       console.log(pluckResult);
+
+      // support for AS in SQL
+      function rename(obj,newNames){
+        return _.reduce(newNames, function(o,nu,old){
+          if(_.has(obj,old)){
+            o[nu] = obj[old];
+          }
+          return o;
+        }, _.omit.apply(null, construct(obj, _.keys(newNames))));
+      }
+
+      console.log(rename({a:1, b:2}, {'a': 'AAA'}));  // {b:2, AAA:1}
+
+      function as(table,newNames){
+        return _.map(table, function(obj){
+          return rename(obj,newNames);
+        });
+      }
+
+      console.log(as(library, {ed: 'edition'}));
+      console.log(project(as(library, {ed:'edition'}),['edition']));
+
+      // now to implement a where like clause
+      function restrict(table, pred){
+        return _.reduce(table, function(newTable, obj){
+          if(truthy(pred(obj))){
+            return newTable;
+          } else{
+            return _.without(newTable,obj);
+          }
+        }, table);
+      }
+
+      console.log(restrict(library, function(book){
+        return book.ed > 1;
+      }));
     </script>
   </body>
 </html>
