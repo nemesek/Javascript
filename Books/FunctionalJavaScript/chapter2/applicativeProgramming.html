@@ -106,6 +106,18 @@
       }
 
       console.log(mapcat(function(e){return construct(e, [","])}, [1,2,3]));
+
+      function butLast(coll){
+        return _.toArray(coll).slice(0,-1);
+      }
+
+      function interpose(inter, coll){
+        return butLast(mapcat(function(e){
+          return construct(e, [inter]);
+        }, coll));
+      }
+
+      console.log(interpose(",", [1,2,3]));  // 1 "," 2 ","
     </script>
   </body>
 </html>
