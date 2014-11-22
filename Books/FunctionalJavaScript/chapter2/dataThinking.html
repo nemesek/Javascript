@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>data thinking</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var zombie = {name: "Bub", film:"Day of the Dead"};
+
+      console.log(_.keys(zombie));  // [name, film]
+
+      console.log(_.values(zombie));  // [Bub, Day of the Dead]
+
+      // the pluck function takes an array of objects and a string and
+      // returns all of the values at the give key for each object in the array
+      var array = [{title: "Chthon", author: "Anthony"},
+        {title: "Grendel", author: "Gardener"},
+        {title: "After Dark"}
+      ];
+      console.log(_.pluck(array,'author')); // [Anthony, Gardner, undefine]
+
+      // pairs takes an object and turns it into a nested array
+      console.log(_.pairs(zombie)); // [[name, Bub], [film, Day of the Dead]]
+
+      // the nested array view can be processed using sequential operations
+      // and reassembled into a new object
+      var obj = _.object(_.map(_.pairs(zombie), function(pair){
+        return [pair[0].toUpperCase(), pair[1]];
+      }));
+
+      console.log(obj);// {FILM: "Day of the Dead", NAME: Bub}
+
+      // flip keys and values
+      console.log(_.invert(zombie));  // {"Bub": "name", "Day of the Dead": "film"}
+
+      // functions for filling in and removing values from objects
+      // according to the values that they take
+      var fillResult = _.pluck(_.map([
+        {title: "Chthon", author: "Anthony"},
+        {title: "Grendel", author: "Gardner"},
+        {title: "After Dark"}
+        ], function(obj){
+          return _.defaults(obj, {author: "Unknown"})
+        }), 'author');
+
+      console.log(fillResult);  // [Anthony, Gardner, Unknown]
+
+      // filters
+      var person = {name: "Romy", token: "j3983ij", password:"tigress"};
+      var info = _.omit(person, 'token', 'password');
+      console.log(info);  // {name: Romy}
+
+      var creds = _.pick(person, 'token', 'password');
+      console.log(creds); // {password: "tigress", token:"j3983ij"}
+
+      // selector functions
+      var library = [
+        {title:"SICP", isbn:"025", ed:1},
+        {title:"SICP", isbn: "026", ed:2},
+        {title:"Joy of Clojure", isbn:"888", ed:1}
+      ];
+
+      var find = _.findWhere(library, {title:"SICP"});
+      console.log(find);  // {title: "SICP", isbn: "026", ed: 1}
+
+      var find2 = _.where(library, {title:"SICP"});
+      console.log(find2);
+    </script>
+  </body>
+</html>

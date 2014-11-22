@@ -85,20 +85,23 @@
       // not applicative because it doesn't take a func as arg and exec it
       function cat(){
         var head = _.first(arguments);
-        if(existy(head))
-          return head.concat.apply(head, _.rest(arguments));
+        if(existy(head)){
+            // debugger;
+            return head.concat.apply(head, _.rest(arguments));
+        }
+
         else
           return [];
       }
 
-      console.log(cat([1,2,3], [4,5], [6,7,8,9]));
+      console.log(cat([1,2,3], [4,5], [6,7,8,9]));  // [1,2,3,4,5,...,9]
 
       // still not applicative
       function construct(head, tail){
         return cat([head], _.toArray(tail));
       }
 
-      console.log(42, [1,2,3]);
+      console.log(construct(42, [1,2,3]));  // 42,1,2,3
 
       // now applicative
       function mapcat(fun, coll){

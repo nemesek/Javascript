@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <title>Table Like Data</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // create a stand in for select
+      function project(table, keys){
+        return _.map(table, function(obj){
+          return _.pick.apply(null, construct(obj, keys));
+        });
+      }
+
+      var library = [
+        {title:"SICP", isbn:"025", ed:1},
+        {title:"SICP", isbn: "026", ed:2},
+        {title:"Joy of Clojure", isbn:"888", ed:1}
+      ];
+
+      var editionResults = project(library, ['title', 'isbn']);
+      console.log(editionResults);
+
+      var isbnResults = project(editionResults, ['isbn']);
+      console.log(isbnResults);
+
+      var pluckResult = _.pluck(isbnResults, 'isbn');
+      console.log(pluckResult);
+    </script>
+  </body>
+</html>
