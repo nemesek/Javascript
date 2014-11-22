@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>Global scope</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      aGlobalVariable = 'living la vida global';
+
+      var mappedGlobal = _.map(_.range(2), function(){return aGlobalVariable;});
+      console.log(mappedGlobal);
+
+      // Lexical scope
+      aVariable = "Outer";
+
+      function aFun(){
+        var aVariable = "Middle";
+        return _.map([1,2,3], function(e){
+          var aVariable = "In";
+          return [aVariable, e].join(' ');
+        });
+      }
+
+      console.log(aFun());  // [In 1, In 2, In 3]
+
+
+    </script>
+  </body>
+</html>
