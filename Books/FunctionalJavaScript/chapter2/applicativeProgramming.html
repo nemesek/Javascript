@@ -2,6 +2,7 @@
   <head>
     <title>Applicative Programming</title>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
   </head>
   <body>
     <script type="text/javascript">
@@ -80,6 +81,31 @@
 
       console.log(_.groupBy(albums, function(a){return a.genre;}));
       console.log(_.countBy(albums, function(a){return a.genre;}));
+
+      // not applicative because it doesn't take a func as arg and exec it
+      function cat(){
+        var head = _.first(arguments);
+        if(existy(head))
+          return head.concat.apply(head, _.rest(arguments));
+        else
+          return [];
+      }
+
+      console.log(cat([1,2,3], [4,5], [6,7,8,9]));
+
+      // still not applicative
+      function construct(head, tail){
+        return cat([head], _.toArray(tail));
+      }
+
+      console.log(42, [1,2,3]);
+
+      // now applicative
+      function mapcat(fun, coll){
+        return cat.apply(null, _.map(coll, fun));
+      }
+
+      console.log(mapcat(function(e){return construct(e, [","])}, [1,2,3]));
     </script>
   </body>
 </html>
