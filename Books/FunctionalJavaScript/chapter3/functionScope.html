@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>Function Scope</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // variable hoisting
+      function strangeIdentity(n){
+        // intentionally strange
+        for(var i = 0; i < n; i++);
+        return i;
+      }
+
+      console.log(strangeIdentity(138));  // 138
+
+      // even stranger, try to simulate funciton scope by using the this ref
+      function strangerIdentity(n){
+        for(this['i'] = 0; this['i'] < n; this['i']++);
+        return this['i'];
+      }
+
+      console.log(strangerIdentity(108));
+      console.log(i);   //global now, we can do better simulation
+
+      // just supply a scratch space and use the magic of this ref
+      console.log(strangerIdentity.call({}, 10000));  // 10000
+      console.log(i); // still 108
+
+      // however this limits us to just function scope, we can clone global
+      // in order to access global vars without modifying the true global space
+      function f(){
+        this['a'] = 200;
+        return this['a'] + this['b'];
+      }
+
+      var globals = {'b':2};
+      console.log(f.call(_.clone(globals))); // 202
+      console.log(globals) // {'b':2}
+
+
+    </script>
+  </body>
+</html>
