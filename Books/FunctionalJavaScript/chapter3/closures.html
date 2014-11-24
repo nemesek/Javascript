@@ -14,7 +14,7 @@
 		}
 
 		var reportLocal = whatWasTheLocal();
-		console.log(reportLocal());
+		console.log(reportLocal());	// "The local was: Oh hai"
 
 		// we can capture more than local vars...function args as well
 		// takes a scaling factor and returns a function that, given a collection of numbers,
@@ -28,13 +28,13 @@
 		}
 
 		var scale10 = createScaleFunction(10);
-		console.log(scale10([1,2,3]));
+		console.log(scale10([1,2,3]));	// 10, 20, 30
 
 		// simulate closure using function scoped this
 		function createWeirdScaleFunction(FACTOR){
 			return function(v){
 				this['FACTOR'] = FACTOR;
-				var captures = this;
+				var captures = this;	// 3rd arg to map is the context
 
 				return _.map(v, _.bind(function(n){
 					return (n * this['FACTOR']);
@@ -43,12 +43,13 @@
 		}
 
 		scale10 = createWeirdScaleFunction(10);
-		console.log(scale10.call({}, [5,6,7]));
+		console.log(scale10.call({}, [5,6,7]));	// [50,60,70]
 
 		// free variables example
 		// these variables can be grabbed and carried along for later use
 		// in inner functions that 'escape' from a higher-level function via return
-		// not sure how these are any different than closures?  I guess since the inner delcares it wasn't technically captured?
+		// not sure how these are any different than closures?  I guess since the inner
+		// declares it wasn't technically captured?
 		function makeAdder(CAPTURED){
 			return function(free){
 				return free + CAPTURED;
@@ -57,10 +58,10 @@
 
 		// each new adder function retains its own unique instance of CAPTURED
 		var add10 = makeAdder(10);
-		console.log(add10(32));
+		console.log(add10(32));	// 42
 
 		var add1024 = makeAdder(1024);
-		console.log(add1024(11));
+		console.log(add1024(11));	// 1035 see how the free variable differs?
 		console.log(add10(32));
 
 		function average(elements){
@@ -77,7 +78,7 @@
 		}
 
 		var averageSq = averageDamp(function(n){return n*n});
-		console.log(averageSq(10));
+		console.log(averageSq(10));	// 55 => (10*10 + 10)/2
 
 		// shadowing example
 		var shadowed = 0;
@@ -86,7 +87,7 @@
 			return ["Value is", shadowed].join(' ');
 		}
 
-		console.log(argShadow(108));
+		console.log(argShadow(108));	// Value is 108
 
 
 		// caputring a shadowed variable
@@ -97,7 +98,7 @@
 		}
 
 		var closureShadow = captureShadow(108);
-		console.log(closureShadow(2));
+		console.log(closureShadow(2));	// 3
 
 		// take a pred function and returns a new
 		// function that returns opposite truthiness
@@ -107,17 +108,20 @@
 			};
 		}
 
-		function isEven(n){debugger;return (n % 2) === 0;}
+		function isEven(n){return (n % 2) === 0;}
 
 		var isOdd = complement(isEven);
-		console.log(isOdd(2));
+		console.log(isOdd(2));	// false
+		console.log(isOdd(413));	// true
 
 		// but what happens if we redefine isEven
 		// going to reassign rather than redefine
-		//function isEven(n){debugger;return false;}
+		console.log('redefining isEven');
+
+		// function isEven(n){return false;}
 		// this works...must have been beause the function declaration is hoisted
 		isEven = function(n){debugger; return false;}
-
+		console.log(isEven(10));
 		// they should still print true, false
 		// because the closure grabs the ref to the function
 		// at the time the closure is created...didn't work out that way
@@ -132,14 +136,14 @@
 		}
 
 		var o = {a:42};
-		var showO = showObject(o);
+		var showO = showObject(o);	//{a:42}
 
 		console.log(showO());
 
 		o.newField = 108;
 		// this new field gets picked up
 		// since the reference to o exists inside and outside the closure
-		console.log(showO());
+		console.log(showO());	// {a:42, newField:108}
 
 		// common pattern with closures is to use captured variables
 		// as private data
@@ -156,8 +160,8 @@
 			};
 		})();
 
-		console.log(pingpong.inc(10));
-		console.log(pingpong.dec(7));
+		console.log(pingpong.inc(10));	// 10
+		console.log(pingpong.dec(7));		// 3
 
 		// Closures as an Abstraction
 		// this function takes a key into an associative structure
@@ -171,15 +175,15 @@
 
 		var best = {title: "Infinite Jest", author:"DFW"};
 		var getTitle = plucker('title');
-		console.log(getTitle(best));
+		console.log(getTitle(best));	// Infinite Jest
 
 		// also works with arrays
 		var books = [{title: "Chthon"}, {stars: 5}, {title: "Botchan"}];
 		var third = plucker(2);
-		console.log(third(books));
+		console.log(third(books));	// {title: "Botchan"}
 
 		// plucker works good with filter
-		console.log(_.filter(books, getTitle));
+		console.log(_.filter(books, getTitle));	// [{title:"Chthon"}, {title:"Botchan"}]
 	</script>
 </body>
 </html>
