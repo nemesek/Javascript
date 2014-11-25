@@ -15,29 +15,30 @@
       // one invocation of always to another, the captured function bound to
       // VALUE is always the same
       var f = always(function(){});
-      console.log(f() === f());
+      console.log(f() === f()); // true
 
       // each new closure captures a different value than every other
       var g = always(function(){});
-      console.log(f() === g());
+      console.log(f() === g()); // false
 
-      console.log(repeatedly(3,always("Odelay!")));
+      // the always func is a combinator
+      console.log(repeatedly(3,always("Odelay!"))); // ["Odelay!", "Odelay!", "Odelay!"]
 
       var rev = invoker('reverse', Array.prototype.reverse);
-      console.log(_.map([[1,2,3]], rev));
+      console.log(_.map([[1,2,3]], rev)); // [[3,2,1]]
 
       // naive unique string generator
       function uniqueString(len){
         return Math.random().toString(36).substr(2,len);
       }
 
-      console.log(uniqueString(10));
+      console.log(uniqueString(10));  // random output
 
       function uniqueStringPrefix(prefix){
         return [prefix, new Date().getTime()].join('');
       }
 
-      console.log(uniqueStringPrefix("argento"));
+      console.log(uniqueStringPrefix("argento")); // argento<random>
 
       function makeUniqueStringFunction(start){
         var COUNTER = start; // free variable
@@ -48,8 +49,8 @@
       }
 
       var uniqueString = makeUniqueStringFunction(0);
-      console.log(uniqueString("dari"));
-      console.log(uniqueString("dari"));
+      console.log(uniqueString("dari"));  // dari0
+      console.log(uniqueString("dari")); // dari1
 
       // could we acieve the same functionality of
       // makeUniqueStringFunction with an object
@@ -62,15 +63,15 @@
       };
 
       // good to go
-      console.log(generator.uniqueString("bohr"));
-      console.log(generator.uniqueString("bohr"));
+      console.log(generator.uniqueString("bohr"));  //bohr0
+      console.log(generator.uniqueString("bohr")); // bohr1
 
-      // woops
+      // woops, this problem arises because we using object member rather than a pure func
       generator.count = "gotcha";
-      console.log(generator.uniqueString("bohr"));
+      console.log(generator.uniqueString("bohr"));  // bohrNaN
 
       // dynamically bind this
-      console.log(generator.uniqueString.call({count:1337}, "bohr"));
+      console.log(generator.uniqueString.call({count:1337}, "bohr")); // bohr1337
 
       // this fn replaces null/undefined args with the default arg
       function fnull(fun){
@@ -89,7 +90,7 @@
         }, 1, 1);
 
       var nums = [1,2,3, null,5];
-      console.log(_.reduce(nums, safeMult));
+      console.log(_.reduce(nums, safeMult));  // 30
 
       // the use of fnull ensures that for any config object
       // the critical values are set to sensible defaults
@@ -105,8 +106,8 @@
         return lookup(config, 'critical');
       }
 
-      console.log(doSomething({critical:9}));
-      console.log(doSomething({}));
+      console.log(doSomething({critical:9})); // 9
+      console.log(doSomething({})); // 108
 
     </script>
   </body>
