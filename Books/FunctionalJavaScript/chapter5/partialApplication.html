@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>Partial Application</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      function divPart(n){
+        return function(d){
+          return n/d;
+        };
+      }
+
+      var over10Part = divPart(10);
+      console.log(over10Part(2)); // 5
+
+      // example of a function that partially applies its first arg
+      // observe that the function returned from partial1 captures the arg1
+      // from the original call and puts it at the front of the arg list
+      // of the executing call
+      function partial1(fun, arg1){
+        return function(){
+          var args = construct(arg1, arguments);
+          return fun.apply(fun, args);
+        };
+      }
+
+      function div(n,d){return n/d;}
+      var overPart101 = partial1(div, 10);
+      console.log(overPart101(5));  // 2
+
+      // a function to partially apply up to two arguments
+      function partial2(fun, arg1, arg2){
+        return function(){
+          var args = cat([arg1,arg2], arguments);
+          return fun.apply(fun,args);
+        };
+      }
+
+      var div10By2 = partial2(div,10,2);
+      console.log(div10By2());  // 5
+    </script>
+  </body>
+</html>
