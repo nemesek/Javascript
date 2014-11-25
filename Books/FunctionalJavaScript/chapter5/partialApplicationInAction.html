@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>In action</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // recall validator from chp 4
+      // we can use for more general purposes
+      var zero = validator("cannot be zero", function(n){return 0 === n});
+      var number = validator("arg must be a number", _.isNumber);
+
+      function sqr(n){
+        if(!number(n)) throw new Error(number.message);
+        if(zero(n)) throw new Error(zero.message);
+
+        return n*n;
+      }
+
+      console.log(sqr(10)); // 100
+      try{
+          sqr(0);
+      }
+      catch(e){
+        console.log(e); // cannot be zero
+      }
+
+      try{
+        sqr('');
+      }
+      catch(e){
+        console.log(e); // arg must be a number
+      }
+
+      // note this can be even better handled via partial application
+      // we can use a new function condition1 and partial application to attach
+      // the preconditions separately from essential calculations
+      function condition1(){
+        var validators = _.toArray(arguments);
+
+        return function(fun, arg){
+          var errors = mapcat(function(isValid){
+            return isValid(arg) ? [] : [isValid.message];
+          }, validators);
+
+          if(!_.isEmpty(errors))
+            throw new Error(errors.join(", "));
+          return fun(arg);
+        };
+      }
+
+      var sqrPre = condition1(validator("arg must not be zero", complement(zero)), validator("arg must be a number", _.isNumber));
+      console.log(sqrPre(_.identity, 10));  // 10
+      try{
+          sqrPre(_.identity, '');
+      }
+      catch(e){
+        console.log(e); // "arg must be a number"
+      }
+
+      try{
+        sqrPre(_.identity, 0);
+      }
+      catch(e){
+        console.log(e); // "arg must not be zero"
+      }
+
+
+      // sqr function with no built in validation
+      function uncheckedSqr(n) {return n*n};
+      console.log(uncheckedSqr(''));  // 0 but it shouldn't be
+
+      // let's fix it up with some validation
+      var checkedSqr = partial1(sqrPre, uncheckedSqr);
+      console.log(checkedSqr(10));  // 100
+
+      try{
+        checkedSqr('');
+      }
+      catch(e){
+        console.log(e); // arg must be a number
+      }
+
+      try{
+        checkedSqr(0);
+      }
+      catch(e){
+        console.log(e); // arg must not be zero
+      }
+
+
+
+    </script>
+  </body>
+</html>

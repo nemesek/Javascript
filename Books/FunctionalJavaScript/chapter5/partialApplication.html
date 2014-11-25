@@ -40,6 +40,25 @@
 
       var div10By2 = partial2(div,10,2);
       console.log(div10By2());  // 5
+
+      // It would be usefult to capture an arbitrary number of args rather than 1 or 2
+      function partial(fun){
+        var pargs = _.rest(arguments);
+
+        return function(){
+          var args = cat(pargs, _.toArray(arguments));
+          return fun.apply(fun, args);
+        };
+      }
+
+      var over10Partial = partial(div, 10);
+      console.log(over10Partial(2));  // 5
+
+      // while the presence of varagrs in JS does not completely defeat the usefulness
+      // of partial application, it can still complicate matters
+      // note how the last few args get ignorned because div only takes 2
+      var complicated = partial(div, 10, 2, 4, 5000);
+      console.log(complicated());
     </script>
   </body>
 </html>

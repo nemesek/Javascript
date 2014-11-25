@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>Delegation Theory</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // traditional OO style
+      function Foo(who){
+        this.me = who;
+      }
+
+      Foo.prototype.identify = function(){
+        return "I am " + this.me;
+      };
+
+      function Bar(who){
+        Foo.call(this, who);
+      }
+
+      Bar.prototype = Object.create(Foo.prototype);
+
+      Bar.prototype.speak = function(){
+        alert("Hello, " + this.identify() + ".");
+      };
+
+      var b1 = new Bar("b1");
+      var b2 = new Bar("b2");
+
+      b1.speak(); // Hello, I am b1
+      b2.speak(); // Hello, I am b2
+
+      // OLOO style
+      Foo2 = {
+        init: function(who){
+          this.me = who;
+        },
+
+        identify: function(){
+          return "I am " + this.me;
+        }
+      };
+
+      Bar2 = Object.create(Foo2);
+      Bar2.speak = function(){
+        alert("Hello, " + this.identify() + ".");
+      };
+
+      var b11 = Object.create(Bar2);
+      b11.init("b11");
+      var b22 = Object.create(Bar2);
+      b22.init("b22");
+
+      b11.speak(); // Hello, I am b11
+      b22.speak();  // Hello, I am b22
+    </script>
+  </body>
+</html>

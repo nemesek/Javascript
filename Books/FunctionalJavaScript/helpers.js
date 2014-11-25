@@ -85,3 +85,26 @@ function isa(type, action){
     }
   };
 }
+
+// this can be handled better via partial application
+// now applicative
+function mapcat(fun, coll){
+  return cat.apply(null, _.map(coll, fun));
+}
+
+function complement(PRED){
+  return function(){
+    return !PRED.apply(null, _.toArray(arguments));
+  };
+}
+
+// example of a function that partially applies its first arg
+// observe that the function returned from partial1 captures the arg1
+// from the original call and puts it at the front of the arg list
+// of the executing call
+function partial1(fun, arg1){
+  return function(){
+    var args = construct(arg1, arguments);
+    return fun.apply(fun, args);
+  };
+}
