@@ -12,42 +12,19 @@
         };
       }
 
-      // function checker(){
-      //   var validators = _.toArray(arguments);
-      //
-      //   return function(obj){
-      //     return _.reduce(validators, function(errs, check){
-      //       if(check(obj))
-      //         return errs;
-      //       else
-      //         return _.chain(errs).push(check.message).value();
-      //     },[]);
-      //   };
-      // }
-
       // this will always pass validation
       var alwaysPasses = checker(always(true), always(true));
-      console.log(alwaysPasses({}));
+      console.log(alwaysPasses({}));  // this returns an empty array since no errors
 
       var fails = always(false);
       fails.message = "a failure in life";
       var alwaysFails = checker(fails);
-      console.log(alwaysFails({}));
+      console.log(alwaysFails({})); // ["a failure in life"]
 
-      // better to have a specific api for creating api's rather than setting a
-      // message property
-      // function validator(message, fun){
-      //   var f = function(){
-      //     return fun.apply(fun, arguments);
-      //   };
-      //
-      //   f['message'] = message;
-      //   return f;
-      // }
 
       var gonnaFail = checker(validator("ZOMG!", always(false)));
 
-      console.log(gonnaFail(100));
+      console.log(gonnaFail(100));  //["ZOMG!"]
 
       // isolate the definition of individual checkers
       // this function can be used as an arg to checker
@@ -57,8 +34,8 @@
       }
 
       var checkCommand = checker(validator("must be a map", aMap));
-      console.log(checkCommand({}));
-      console.log(checkCommand(42));
+      console.log(checkCommand({}));  // []
+      console.log(checkCommand(42));  // ["must be a map"]
 
       function existy(x){return x != null};
 
@@ -87,9 +64,9 @@
       var checkCommand2 = checker(validator("must be a map", aMap),
         hasKeys('msg', 'type'));
 
-      console.log(checkCommand2({msg: "blah", type:"display"}));
-      console.log(checkCommand2(42));
-      console.log(checkCommand2({}));
+      console.log(checkCommand2({msg: "blah", type:"display"}));  //[]
+      console.log(checkCommand2(42)); //["must be a map", "Must have value for keys: msg type"]
+      console.log(checkCommand2({})); // ["Must have value for keys: msg type"]
 
     </script>
   </body>
