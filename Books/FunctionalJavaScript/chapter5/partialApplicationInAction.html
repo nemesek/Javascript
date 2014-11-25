@@ -89,6 +89,24 @@
         console.log(e); // arg must not be zero
       }
 
+      function isEven(n){return n % 2 === 0;}
+      // we can mix in validators at a later time
+      var sillySquare = partial1(condition1(validator("should be even", isEven)), checkedSqr);
+      console.log(sillySquare(10)); // 100
+
+      try{
+        sillySquare(11);
+      }
+      catch(e){
+        console.log(e); // should be even
+      }
+
+      try{
+        sillySquare('');
+      }
+      catch(e){
+        console.log(e); // arg must be a number
+      }
 
 
     </script>
