@@ -33,8 +33,8 @@
       var str = dispatch(invoker('toString', Array.prototype.toString),
                         invoker('toString', String.prototype.toString));
 
-      console.log(str("a"));
-      console.log(str(_.range(10)));
+      console.log(str("a"));  // a, uses the string delegate passed in
+      console.log(str(_.range(10)));  // 0,1,2,3,4,5,6,7,8,9 -- uses the array implementation
 
       // the use of dispatch is not dependent on the use of invoker
       // but instead adheres to a certain contract.  We can tap into this contract
@@ -44,21 +44,22 @@
         return s.split('').reverse().join("");
       }
 
-      console.log(stringReverse("abc"));
-      console.log(stringReverse(1));
+      console.log(stringReverse("abc"));  // cba
+      console.log(stringReverse(1));  // undefined
 
       // Now stringReverse can be composed with Array#reverse method to define
       // a new polymorphic function, rev
       var rev = dispatch(invoker('reverse', Array.prototype.reverse), stringReverse);
-      console.log(rev([1,2,3]));
-      console.log(rev("abc"));
+      console.log(rev([1,2,3]));  // [3,2,1] - uses the array prototype delegate
+      console.log(rev("abc"));  // cba - uses the stringReverse delegate
 
       // a function created by dispatch can also be an argument to dispatch
       // for max flexibility
+      console.log('max flex');
       var sillyReverse = dispatch(rev, always(42));
-      console.log(sillyReverse([1,2,3]));
-      console.log(sillyReverse("abc"));
-      console.log(sillyReverse(100000));
+      console.log(sillyReverse([1,2,3])); // uses array delegate
+      console.log(sillyReverse("abc")); // uses stringReverse delegate
+      console.log(sillyReverse(100000));  // uses always delgate
 
       // dispatch eliminates the command/switch pattern
       function performCommandHardCoded(command){
@@ -86,7 +87,7 @@
         isa('join',  function(obj){console.log('join');return true;}),
         function(obj){ console.log('problemo');});
 
-      performCommand({type:'join', target:'waiting-room'});
+      performCommand({type:'join', target:'waiting-room'}); // join
 
       // we can extend performCommand by wrapping it another
       // dispatch function
@@ -95,8 +96,8 @@
         return true;
       }), performCommand);
 
-      performAdminCommand({type:'kill', hostname:'localhost'});
-      performAdminCommand({type:'notify'});
+      performAdminCommand({type:'kill', hostname:'localhost'}); // kill
+      performAdminCommand({type:'notify'}); // notify
     </script>
   </body>
 </html>
