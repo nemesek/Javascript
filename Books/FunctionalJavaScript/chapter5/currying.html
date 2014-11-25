@@ -16,11 +16,18 @@
         return method.apply(target, args);
       }
 
-      console.log(rightAwayInvoker(Array.prototype.reverse,[3,2,1]));
+      console.log(rightAwayInvoker(Array.prototype.reverse,[3,2,1])); // [1,2,3]
 
       // using the already defined invoker...
       // invocation is deferred
-      console.log(invoker('reverse', Array.prototype.reverse)([1,2,3]));
+      // the function invoker is curried, meaning that the invocation of the
+      // method on a given target is deferred until its logical number of args
+      // (i.e. 2) is exhausted
+      // note the double parens - we immediately invoke it
+      console.log(invoker('reverse', Array.prototype.reverse)([1,2,3])); // [3,2,1]
+      // the above line is the same as the next two
+      var curried = invoker('reverse', Array.prototype.reverse);
+      console.log(curried([3,2,1]));  // [1,2,3]
 
       function leftCurryDiv(n){
           return function(d){
@@ -35,9 +42,9 @@
       }
 
       var divide10By = leftCurryDiv(10);
-      console.log(divide10By(2));
+      console.log(divide10By(2)); // 5
       var divideBy10 = rightCurryDiv(10);
-      console.log(divideBy10(2));
+      console.log(divideBy10(2)); // 0.2
 
       // simple higher order function that takes a function
       // and returns a function "pinned" to receive only one argument
@@ -49,20 +56,20 @@
       }
 
       // one arg parseInt
-      console.log(parseInt('11'));
+      console.log(parseInt('11'));  // 11
 
       // two arg parseInt
-      console.log(parseInt('11', 2));
+      console.log(parseInt('11', 2)); // 3 -- binary
 
       // complications arise using parseInt in a first class way
       // the problem here is that the function passed to map
       // will be invoked with each element of the array, the index of the element,
       // plus the array itself...so what this maps to is:
       // parseInt('11, 0'), parseInt('11', 1)...
-      console.log(['11', '11', '11', '11'].map(parseInt));
+      console.log(['11', '11', '11', '11'].map(parseInt));  // [11, NaN, 3, 4]
 
       // using curry you can force parseInt to receive only one arg on each call
-      console.log(['11', '11', '11', '11'].map(curry(parseInt)));
+      console.log(['11', '11', '11', '11'].map(curry(parseInt))); // [11,11,11,11]
 
       // currying two function parameters
       function curry2(fun){
@@ -76,14 +83,14 @@
       function div(n,d){return n/d;}
 
       var div10 = curry2(div)(10);
-      console.log(div10(50));
+      console.log(div10(50)); // 5
 
       // we can use curry2 to fix the behavior of parseInt so it handles only
       // binary numbers when parsing
       var parseBinaryString = curry2(parseInt)(2);
 
-      console.log(parseBinaryString("111"));
-      console.log(parseBinaryString("10"));
+      console.log(parseBinaryString("111"));  // 7
+      console.log(parseBinaryString("10")); // 2
 
       // Building new functions using currying
       var plays = [{artist:"Burial", track:"Archangel"},
@@ -95,14 +102,14 @@
 
       console.log(_.countBy(plays, function(song){
         return [song.artist, song.track].join(" - ");
-      }));
+      })); // {Burial - Archangel:3, Ben Frost - Stomp:2, Emeralds - Snores}
 
       function songToString(song){
         return [song.artist, song.track].join(" - ");
       }
 
       var songCount = curry2(_.countBy)(songToString);
-      console.log(songCount(plays));
+      console.log(songCount(plays)); // {Burial - Archangel:3, Ben Frost - Stomp:2, Emeralds - Snores}
 
       // function that curries up to three parameters
       function curry3(fun){
@@ -118,7 +125,7 @@
       // build an array of all the unique songs I have played
       // equivalent to _.uniq(plays, false, songToString)
       var songsPlayed = curry3(_.uniq)(false)(songToString);
-      console.log(songsPlayed(plays));
+      console.log(songsPlayed(plays)); //[{artist: "Burial", track: "Archangel"} ..]
 
       // use curry3 to generate HTML hexadecimal values with specific hues
       // start with a function rgbToHexString
@@ -147,9 +154,9 @@
       var withinRange = checker(validator("arg must be greater than 10", greaterThan(10)),
                                 validator("arg must be less than 20", lessThan(20)));
 
-      console.log(withinRange(15));
-      console.log(withinRange(1));
-      console.log(withinRange(100));
+      console.log(withinRange(15)); // []
+      console.log(withinRange(1));  // ["arg must be greater than 10"]
+      console.log(withinRange(100));  // ["argu must be less than 20"]
     </script>
   </body>
 </html>
