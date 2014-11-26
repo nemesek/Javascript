@@ -108,3 +108,26 @@ function partial1(fun, arg1){
     return fun.apply(fun, args);
   };
 }
+
+function hasKeys(){
+  var KEYS = _.toArray(arguments);
+
+  var fun = function(obj){
+    return _.every(KEYS, function(k){
+      return _.has(obj, k);
+    });
+  };
+
+  fun.message = cat(["Must have values for keys:"], KEYS).join(" ");
+  return fun;
+}
+
+// It would be usefult to capture an arbitrary number of args rather than 1 or 2
+function partial(fun){
+  var pargs = _.rest(arguments);
+
+  return function(){
+    var args = cat(pargs, _.toArray(arguments));
+    return fun.apply(fun, args);
+  };
+}

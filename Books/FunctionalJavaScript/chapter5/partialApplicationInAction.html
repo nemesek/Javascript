@@ -108,7 +108,41 @@
         console.log(e); // arg must be a number
       }
 
+      // let's reimplement our command object from chapter4
+      var validateCommand = condition1(validator("arg must be aMap", _.isObject),
+        validator("Object must have keys: ", hasKeys('msg', 'type')));
 
+      var createCommand = partial(validateCommand, _.identity);
+
+      try{
+        createCommand({});
+      }
+      catch(e){
+        console.log(e); // Object must have keys
+      }
+
+      try{
+        createCommand(21);
+      }
+      catch(e){
+        console.log(e); // arg must be aMap, Object must have keys
+      }
+
+      console.log(createCommand({msg:"", type:""})); // {msg:"", type:""}
+
+      // lets build a derived command type that builds off of createCommand
+      var createLaunchCommand = partial1(
+        condition1(
+          validator("arg must have the count down", hasKeys('countDown'))), createCommand);
+
+      try{
+        createLaunchCommand({msg:"", type:""});
+      }
+      catch(e){
+        console.log(e); // arg must have the count down
+      }
+
+      console.log({msg:"", type:"", countDown:10}); // {msg:"", type:"", countDown:10}
     </script>
   </body>
 </html>
