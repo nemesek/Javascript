@@ -131,3 +131,47 @@ function partial(fun){
     return fun.apply(fun, args);
   };
 }
+
+// a function that takes another function
+// that takes an array and calls the original with apply
+// so that its elements serve as its arguments
+function splat(fun){
+  return function(array){
+    return fun.apply(null, array);
+  };
+}
+
+// note this can be even better handled via partial application
+// we can use a new function condition1 and partial application to attach
+// the preconditions separately from essential calculations
+function condition1(){
+  var validators = _.toArray(arguments);
+
+  return function(fun, arg){
+    var errors = mapcat(function(isValid){
+      return isValid(arg) ? [] : [isValid.message];
+    }, validators);
+
+    if(!_.isEmpty(errors))
+      throw new Error(errors.join(", "));
+    return fun(arg);
+  };
+}
+
+var zero = validator("cannot be zero", function(n){return 0 === n});
+var greaterThan = curry2(function(lhs, rhs){return lhs > rhs;});
+
+// currying two function parameters
+function curry2(fun){
+  return function(secondArg){
+    return function(firstArg){
+      return fun(firstArg, secondArg);
+    };
+  };
+}
+
+var sqrPre = condition1(validator("arg must not be zero", complement(zero)), validator("arg must be a number", _.isNumber));
+// sqr function with no built in validation
+function uncheckedSqr(n) {return n*n};
+// let's fix it up with some validation
+var checkedSqr = partial1(sqrPre, uncheckedSqr);

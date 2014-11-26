@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>Stitching Functions End-to-End with Compose</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // Functional composition takes advantage of this type of data chain by building new functions from
+      // multiple functions and their data transformations along the way
+      function isntString(str){
+        return ! _.isString(str);
+      }
+
+      console.log(isntString(1)); // true
+
+      // But this same function can be build from function composition, using _.compose
+      var isntString2 = _.compose(function(x){return !x}, _.isString);
+      console.log(isntString2([])); // true
+
+      // an even more functional approach which effectively turns a string into a Boolean value
+      // without explicitly changing either one
+      function not(x) {return !x;}
+      var isntString3 = _.compose(not, _.isString);
+      console.log(isntString3('a'));  //false
+
+      // lets define mapcat with compose
+      var composedMapcat = _.compose(splat(cat), _.map);
+      console.log(composedMapcat([[1,2], [3,4],[5]], _.identity));  // [1,2,3,4,5]
+
+      // use composition to add postconditions to our checkedSqr fun
+      var sqrPost = condition1(validator("result should be a number", _.isNumber),
+        validator("result should not be zero", complement(zero)),
+        validator("result should be positive", greaterThan(0)));
+
+      try{
+        sqrPost(_.identity, 0);
+      }
+      catch(e){
+        console.log(e); // result should not be zero, result should be positive
+      }
+
+      try{
+        sqrPost(_.identity, -1);
+      }
+      catch(e){
+        console.log(e); // result should be positive
+      }
+
+      try{
+        sqrPost(_.identity, '');
+      }
+      catch(e){
+        console.log(e); // result should be a number, result should be positive
+      }
+
+      console.log(sqrPost(_.identity, 100)); // 100
+
+      // so how do we glue the postcondition check onto the existing uncheckedSqr and sqrPre?
+      // use compose
+      var megaCheckedSqr = _.compose(partial(sqrPost, _.identity), checkedSqr);
+      console.log(megaCheckedSqr(10));  // 100
+
+      try{
+        megaCheckedSqr(0);
+      }
+      catch(e){
+        console.log(e); // arg must not be zero
+      }
+
+      try{
+        megaCheckedSqr(NaN);
+      }
+      catch(e){
+        console.log(e); // result should be positive
+      }
+    </script>
+  </body>
+</html>
