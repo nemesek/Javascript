@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <title>Recursion</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script type="text/javascript" src="../helpers.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      function myLength(ary){
+        if(_.isEmpty(ary))
+          return 0;
+        else
+          return 1 + myLength(_.rest(ary));
+      }
+
+      console.log(myLength(_.range(10))); // 10
+      console.log(myLength(_.range(0)));  // 0
+
+      // a best practice is not consume input args as we are doing so in myLength
+      // here is a function that doesn't consume the input
+      function cycle(times,ary){
+        if(times <= 0)
+          return [];
+        else
+          return cat(ary, cycle(times - 1, ary));
+      }
+
+      console.log(cycle(2,[1,2,3]));  // [1,2,3,1,2,3]
+      console.log(_.take(cycle(20,[1,2,3]),11));  // [1,2,3,..3,1,2]
+
+      // let's write the inverse of zip
+      console.log(_.zip(['a', 'b','c'], ['1','2','3']));  // [[a,1], .., [c,3]]
+
+      function constructPair(pair, rests){
+        return [construct(_.first(pair), _.first(rests)), construct(second(pair), second(rests))];
+      }
+
+      console.log(constructPair(['a', 1],[[], []]));
+
+    </script>
+  </body>
+</html>

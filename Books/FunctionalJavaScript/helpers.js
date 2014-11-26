@@ -175,3 +175,18 @@ var sqrPre = condition1(validator("arg must not be zero", complement(zero)), val
 function uncheckedSqr(n) {return n*n};
 // let's fix it up with some validation
 var checkedSqr = partial1(sqrPre, uncheckedSqr);
+
+function nth(a, index){
+	if(!_.isNumber(index)) fail("Expected a number as the index");
+	if(!isIndexed(a)) fail("Not supported on non-indexed type");
+	if((index < 0) || index > a.length - 1) fail("Index value is out of bounds");
+	return a[index];
+}
+
+function second(a){
+	return nth(a,1);
+}
+
+function isIndexed(data){
+	return _.isArray(data) || _.isString(data);
+}
