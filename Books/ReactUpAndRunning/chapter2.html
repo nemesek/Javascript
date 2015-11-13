@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>hello React</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <div id="app">
+      <!-- my app renders here -->
+    </div>
+    <div id="app2"></div>
+    <div id="app3"></div>
+    <script src="react-0.14.2/build/react.js"></script>
+    <script src="Component.js"></script>
+    <script src="Component2.js"></script>
+    <script src="TextAreaCounter.js"></script>
+    <script>
+      React.render(
+        React.createElement(Component, {name: "Dan"}),
+        document.getElementById("app")
+      );
+
+      React.render(
+        React.createElement(Component2, {name: "Nemesek"}),
+        document.getElementById("app2")
+      );
+
+      React.render(
+        React.createElement(TextAreaCounter, {text: "Ava"}),
+        document.getElementById("app3")
+      );
+    </script>
+  </body>
+</html>
