@@ -59,6 +59,30 @@
       myObject.sayName = function(){
         console.log("Stringer's the name");
       };
+      
+      var scopedSucka2 = (function(foo){
+        var name = foo.character;
+        var sayName = foo.sayName;
+        var globalFuncRef = foo.funcThatReferencesGlobal;
+
+        return {
+          name : name,
+          whatsMyName: sayName,
+          globalFuncRef: globalFuncRef
+        };
+      })(myObject);
+      
+      var scopedSucka3 = (function(foo){
+        // var name = foo.character;
+        // var sayName = foo.sayName;
+        // var globalFuncRef = foo.funcThatReferencesGlobal;
+
+        return {
+          name : foo.character,
+          whatsMyName: foo.sayName,
+          globalFuncRef: foo.funcThatReferencesGlobal
+        };
+      })(myObject);
 
       // will my global get clobbered?
       var myObject={
@@ -70,8 +94,13 @@
 
       var log1 = logger();
       log1(scopedSucka);
+      console.log("-------------");
       myObject = {};
       log1(scopedSucka);
+      console.log("--------------");
+      log1(scopedSucka2);
+      console.log("---------------");
+      log1(scopedSucka3);
 
     </script>
   </body>
